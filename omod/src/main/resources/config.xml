@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.2//EN" "http://resources.openmrs.org/doctype/config-1.2.dtd">
+
+<module configVersion="1.2">
+
+	<!-- Base Module Properties -->
+	<id>@MODULE_ID@</id>
+	<name>@MODULE_NAME@</name>
+	<version>@MODULE_VERSION@</version>
+	<package>@MODULE_PACKAGE@</package>
+	<author>Ghanshyam</author>
+	<description>
+		Operation Theatre Module
+	</description>
+
+	<!-- Module Activator -->
+	<activator>@MODULE_PACKAGE@.OperationTheatreModuleActivator</activator>
+
+	<require_modules>
+		<require_module>org.openmrs.module.hospitalcore</require_module>
+	</require_modules>
+
+	<require_version>${openMRSVersion}</require_version>
+
+	<!-- Extensions -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>@MODULE_PACKAGE@.extension.html.AdminList</class>
+	</extension>
+	<extension>
+		<point>org.openmrs.gutter.tools</point>
+		<class>@MODULE_PACKAGE@.extension.html.OTHeader</class>
+	</extension>
+
+	<privilege>
+		<name>Access OT</name>
+		<description>Allows user to access OT</description>
+	</privilege>
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with ${project.parent.artifactId}. -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+	<mappingFiles>
+
+	</mappingFiles>
+
+</module>
