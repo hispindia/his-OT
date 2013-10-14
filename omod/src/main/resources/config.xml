@@ -8,7 +8,7 @@
 	<name>@MODULE_NAME@</name>
 	<version>@MODULE_VERSION@</version>
 	<package>@MODULE_PACKAGE@</package>
-	<author>Ghanshyam</author>
+	<author>Ghanshyam, Abhishek, Ankur</author>
 	<description>
 		Operation Theatre Module
 	</description>
@@ -36,7 +36,23 @@
 		<name>Access OT</name>
 		<description>Allows user to access OT</description>
 	</privilege>
-
+	<privilege>
+		<name>Access Minor OT Procedures</name>
+		<description>Allows user to access Minor OT Procedures</description>
+	</privilege>
+	<privilege>
+		<name>Access Major OT Procedures</name>
+		<description>Allows user to access Major OT Procedures</description>
+	</privilege>
+	<privilege>
+		<name>Manage Minor OT Queue</name>
+		<description>Allows user to manage Minor OT Queue </description>
+	</privilege>
+	<privilege>
+		<name>Enter Minor OT Observations</name>
+		<description>Allows user to enter Minor OT Observations</description>
+	</privilege>
+	
 	<!-- Internationalization -->
 	<!-- All message codes should start with ${project.parent.artifactId}. -->
 	<messages>
@@ -54,7 +70,7 @@
 	<!-- /Internationalization -->
 
 	<mappingFiles>
-
+		OperationTheatre.hbm.xml
 	</mappingFiles>
 
 </module>

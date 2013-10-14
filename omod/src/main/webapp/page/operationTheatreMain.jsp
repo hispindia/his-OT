@@ -19,6 +19,7 @@
 --%>
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ include file="../includes/js_css.jsp" %>
 <br/>
 <openmrs:require privilege="Access OT" otherwise="/login.htm" redirect="/module/OT/main.form" />
 <%@ include file="../page/localHeader.jsp" %>

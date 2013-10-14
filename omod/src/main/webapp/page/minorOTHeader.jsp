@@ -21,16 +21,16 @@
 	style="border-bottom: 1px solid black; padding-bottom: 5px; margin-bottom: 10px;">
 	<ul id="menu">
 		<li class="first"><span
-			style="font-weight: bold; font-size: large;">Operation Theatre</span>
+			style="font-weight: bold; font-size: medium;">Minor OT Procedure</span>
 		</li>
-		<openmrs:hasPrivilege privilege="Access Minor OT Procedures">
-            <li id="MinorOtId" <c:if test='<%= request.getRequestURI().contains("/minorOT") %>'>class="active"</c:if>>
-				<a href="minorOT.form">Minor OT Procedures</a>
+		<openmrs:hasPrivilege privilege="Manage Minor OT Queue">
+            <li id="QueueId" <c:if test='<%= request.getRequestURI().contains("/queue") %>'>class="active"</c:if>>
+				<a href="queue.form">Queue</a>
             </li>
         </openmrs:hasPrivilege>
-        <openmrs:hasPrivilege privilege="Access Major OT Procedures">
-            <li id="MajorOtId" <c:if test='<%= request.getRequestURI().contains("/majorOT") %>'>class="active"</c:if>>
-				<a href="majorOT.form">Major OT Procedures</a>
+        <openmrs:hasPrivilege privilege="Enter Minor OT Observations">
+            <li id="ObservationId" <c:if test='<%= request.getRequestURI().contains("/observation") %>'>class="active"</c:if>>
+				<a href="observation.form">Enter Observations</a>
             </li>
         </openmrs:hasPrivilege>
 	</ul>
@@ -50,18 +50,18 @@
 	
 	// choose which <li> will be activated using @url
 	var url = location.href;
-	if(contain(url, "minorOT.form")){
-		activate("MinorOtId");
-	} else if(contain(url, "majorOT.form")){
-		activate("MajorOtId");
+	if(contain(url, "queue.form")){
+		activate("QueueId");
+	} else if(contain(url, "observation.form")){
+		activate("ObservationId");
 	}
 	
 	
-	// get the context path
-	function getContextPath() {
-		pn = location.pathname;
-		len = pn.indexOf("/", 1);
-		cp = pn.substring(0, len);
-		return cp;
-	}
+// 	// get the context path
+// 	function getContextPath() {
+// 		pn = location.pathname;
+// 		len = pn.indexOf("/", 1);
+// 		cp = pn.substring(0, len);
+// 		return cp;
+// 	}
 </script>
