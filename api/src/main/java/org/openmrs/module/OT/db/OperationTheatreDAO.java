@@ -46,22 +46,24 @@ public interface OperationTheatreDAO {
 	 * @param procedures
 	 * @param patients
 	 * @param page
+	 * @param phrase 
 	 * @return List<OpdTestOrder>
 	 * @throws ParseException
 	 */
 	public List<OpdTestOrder> getSchedulesMinorOT(Date scheduleDate, List<Concept> procedures,
-			List<Patient> patients, int page) throws ParseException;
+			List<Patient> patients, int page, String phrase) throws ParseException;
 	
 	/**
 	 * 
 	 * @param scheduleDate
 	 * @param procedures
 	 * @param patients
+	 * @param phrase 
 	 * @return Integer
 	 * @throws ParseException
 	 */
 	public Integer countScheduleMinorOT(Date scheduleDate, List<Concept> procedures,
-			List<Patient> patients) throws ParseException;
+			List<Patient> patients, String phrase) throws ParseException;
 	
 	/**
 	 * 
@@ -98,18 +100,20 @@ public interface OperationTheatreDAO {
 	 * @param procedures
 	 * @param patients
 	 * @param page
+	 * @param phrase 
 	 * @return List
 	 */
 	public List<MinorOTProcedure> getMinorOTSchedules(Date scheduleDate,
-			List<Concept> procedures, List<Patient> patients, Integer page) throws ParseException;
+			List<Concept> procedures, List<Patient> patients, Integer page, String phrase) throws ParseException;
 
 	/**
 	 * 
 	 * @param startDate
 	 * @param procedures
 	 * @param patients
+	 * @param phrase 
 	 * @return Integer
 	 */
 	public Integer countMinorOTSchedule(Date scheduleDate,
-			List<Concept> procedures, List<Patient> patients) throws ParseException;
+			List<Concept> procedures, List<Patient> patients, String phrase) throws ParseException;
 }

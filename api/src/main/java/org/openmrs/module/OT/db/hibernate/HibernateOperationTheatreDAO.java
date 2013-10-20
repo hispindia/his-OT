@@ -22,6 +22,7 @@ package org.openmrs.module.OT.db.hibernate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -66,54 +67,61 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<OpdTestOrder> getSchedulesMinorOT(Date scheduleDate,
-			List<Concept> procedures, List<Patient> patients, int page) 
+			List<Concept> procedures, List<Patient> patients, int page, String phrase) 
 					throws ParseException{
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				OpdTestOrder.class);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String startDate = sdf.format(scheduleDate) + " 00:00:00";
-		String endDate = sdf.format(scheduleDate) + " 23:59:59";
-		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
-		criteria.add(Expression.between("otschedule",
-				dateTimeFormatter.parse(startDate),
-				dateTimeFormatter.parse(endDate)));
-		criteria.add(Restrictions.eq("billingStatus", 1));
-		criteria.add(Restrictions.eq("cancelStatus", 0));
-		criteria.add(Restrictions.in("valueCoded", procedures));
-		if (!CollectionUtils.isEmpty(patients))
-			criteria.add(Restrictions.in("patient", patients));
-		criteria.addOrder(org.hibernate.criterion.Order.asc("otschedule"));
-		int firstResult = (page - 1) * OTConstants.PAGESIZE;
-		criteria.setFirstResult(firstResult);
-		criteria.setMaxResults(OTConstants.PAGESIZE);
-		return criteria.list();
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return Collections.EMPTY_LIST;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					OpdTestOrder.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otschedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.eq("billingStatus", 1));
+			criteria.add(Restrictions.eq("cancelStatus", 0));
+			criteria.add(Restrictions.in("valueCoded", procedures));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			criteria.addOrder(org.hibernate.criterion.Order.asc("otschedule"));
+			int firstResult = (page - 1) * OTConstants.PAGESIZE;
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(OTConstants.PAGESIZE);
+			return criteria.list();
+		}
 	}
 	
 	//
 	// Schedule
 	//
 	public Integer countScheduleMinorOT(Date scheduleDate, List<Concept> procedures,
-			List<Patient> patients) throws ParseException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				OpdTestOrder.class);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String startDate = sdf.format(scheduleDate) + " 00:00:00";
-		String endDate = sdf.format(scheduleDate) + " 23:59:59";
-		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
-		criteria.add(Expression.between("otschedule",
-				dateTimeFormatter.parse(startDate),
-				dateTimeFormatter.parse(endDate)));
-		criteria.add(Restrictions.eq("billingStatus", 1));
-		criteria.add(Restrictions.eq("cancelStatus", 0));
-		criteria.add(Restrictions.in("valueCoded", procedures));
-		if (!CollectionUtils.isEmpty(patients))
-			criteria.add(Restrictions.in("patient", patients));
-		Number rs = (Number) criteria.setProjection(Projections.rowCount())
-				.uniqueResult();
-		return rs != null ? rs.intValue() : 0;
-		
+			List<Patient> patients, String phrase) throws ParseException {
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return 0;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					OpdTestOrder.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otschedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.eq("billingStatus", 1));
+			criteria.add(Restrictions.eq("cancelStatus", 0));
+			criteria.add(Restrictions.in("valueCoded", procedures));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			Number rs = (Number) criteria.setProjection(Projections.rowCount())
+					.uniqueResult();
+			return rs != null ? rs.intValue() : 0;
+		}
 	}
 
 	public Obs getObsInstance(Encounter encounter, Concept concept) {
@@ -144,46 +152,54 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<MinorOTProcedure> getMinorOTSchedules(Date scheduleDate,
-			List<Concept> procedures, List<Patient> patients, Integer page) throws ParseException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				MinorOTProcedure.class);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String startDate = sdf.format(scheduleDate) + " 00:00:00";
-		String endDate = sdf.format(scheduleDate) + " 23:59:59";
-		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
-		criteria.add(Expression.between("otSchedule",
-				dateTimeFormatter.parse(startDate),
-				dateTimeFormatter.parse(endDate)));
-		criteria.add(Restrictions.in("procedure", procedures));
-		criteria.add(Restrictions.ne("status", OTConstants.PROCEDURE_STATUS_COMPLETED));
-		if (!CollectionUtils.isEmpty(patients))
-			criteria.add(Restrictions.in("patient", patients));
-		criteria.addOrder(org.hibernate.criterion.Order.asc("otSchedule"));
-		int firstResult = (page - 1) * OTConstants.PAGESIZE;
-		criteria.setFirstResult(firstResult);
-		criteria.setMaxResults(OTConstants.PAGESIZE);
-		return criteria.list();
+			List<Concept> procedures, List<Patient> patients, Integer page, String phrase) throws ParseException {
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return Collections.EMPTY_LIST;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					MinorOTProcedure.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otSchedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.in("procedure", procedures));
+			criteria.add(Restrictions.ne("status", OTConstants.PROCEDURE_STATUS_COMPLETED));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			criteria.addOrder(org.hibernate.criterion.Order.asc("otSchedule"));
+			int firstResult = (page - 1) * OTConstants.PAGESIZE;
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(OTConstants.PAGESIZE);
+			return criteria.list();
+		}
 	}
 
 	public Integer countMinorOTSchedule(Date scheduleDate,
-			List<Concept> procedures, List<Patient> patients)
+			List<Concept> procedures, List<Patient> patients, String phrase)
 			throws ParseException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				MinorOTProcedure.class);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String startDate = sdf.format(scheduleDate) + " 00:00:00";
-		String endDate = sdf.format(scheduleDate) + " 23:59:59";
-		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
-		criteria.add(Expression.between("otSchedule",
-				dateTimeFormatter.parse(startDate),
-				dateTimeFormatter.parse(endDate)));
-		criteria.add(Restrictions.in("procedure", procedures));
-		if (!CollectionUtils.isEmpty(patients))
-			criteria.add(Restrictions.in("patient", patients));
-		Number rs = (Number) criteria.setProjection(Projections.rowCount())
-				.uniqueResult();
-		return rs != null ? rs.intValue() : 0;
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return 0;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					MinorOTProcedure.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otSchedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.in("procedure", procedures));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			Number rs = (Number) criteria.setProjection(Projections.rowCount())
+					.uniqueResult();
+			return rs != null ? rs.intValue() : 0;
+		}
 	}
 }

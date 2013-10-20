@@ -89,7 +89,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		List<Patient> patients = Context.getPatientService()
 				.getPatients(phrase);
 		List<OpdTestOrder> schedules = dao.getSchedulesMinorOT(startDate, 
-				procedures, patients, page);
+				procedures, patients, page, phrase);
 		return schedules;
 	}
 	
@@ -98,7 +98,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		
 		List<Patient> patients = Context.getPatientService()
 				.getPatients(phrase);
-		return dao.countScheduleMinorOT(startDate, procedures, patients);
+		return dao.countScheduleMinorOT(startDate, procedures, patients, phrase);
 	}
 
 	public Obs getDiagnosisOTProcedure(Encounter encounter) {
@@ -163,7 +163,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		List<Patient> patients = Context.getPatientService()
 				.getPatients(phrase);
 		List<MinorOTProcedure> schedules = dao.getMinorOTSchedules(startDate, 
-				procedures, patients, page);
+				procedures, patients, page, phrase);
 		return schedules;
 	}
 
@@ -172,7 +172,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		
 		List<Patient> patients = Context.getPatientService()
 				.getPatients(phrase);
-		return dao.countMinorOTSchedule(startDate, procedures, patients);
+		return dao.countMinorOTSchedule(startDate, procedures, patients, phrase);
 	}
 
 	public String observationProcedure(MinorOTProcedure schedule,
