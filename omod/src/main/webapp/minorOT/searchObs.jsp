@@ -78,7 +78,7 @@ otProcedureNo = ${otProcedureNo};
 				<td id="observationBox_${otProcedure.orderId}">					
 					<c:choose>
 						<c:when test="${otProcedure.status eq 'accepted'}">
-							<a href="observationProcedure.form?orderId=${otProcedure.orderId}&modal=true&height=360&width=700" class="thickbox" title="Observations">
+							<a href="observationProcedure.form?orderId=${otProcedure.orderId}&modal=true&height=300&width=600" class="thickbox" title="Observations">
 								Enter Observations 
 							</a>
 						</c:when>
