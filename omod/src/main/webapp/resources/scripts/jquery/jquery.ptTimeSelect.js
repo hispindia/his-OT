@@ -103,7 +103,7 @@
         setButtonLabel: 'Set',
         popupImage:     undefined,
         onFocusDisplay: true,
-        zIndex:         10,
+        zIndex:         104,
         onBeforeShow:   undefined,
         onClose:        undefined
     };
