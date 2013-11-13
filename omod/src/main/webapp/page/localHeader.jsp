@@ -23,12 +23,12 @@
 		<li class="first"><span
 			style="font-weight: bold; font-size: large;">Operation Theatre</span>
 		</li>
-		<openmrs:hasPrivilege privilege="Access Minor OT Procedures">
+		<openmrs:hasPrivilege privilege="Access Minor OT">
             <li id="MinorOtId" <c:if test='<%= request.getRequestURI().contains("/minorOT") %>'>class="active"</c:if>>
 				<a href="minorOT.form">Minor OT Procedures</a>
             </li>
         </openmrs:hasPrivilege>
-        <openmrs:hasPrivilege privilege="Access Major OT Procedures">
+        <openmrs:hasPrivilege privilege="Access Major OT">
             <li id="MajorOtId" <c:if test='<%= request.getRequestURI().contains("/majorOT") %>'>class="active"</c:if>>
 				<a href="majorOT.form">Major OT Procedures</a>
             </li>

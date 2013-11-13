@@ -23,12 +23,12 @@
 		<li class="first"><span
 			style="font-weight: bold; font-size: medium;">Minor OT Procedure</span>
 		</li>
-		<openmrs:hasPrivilege privilege="Manage Minor OT Queue">
+		<openmrs:hasPrivilege privilege="Access Minor OT">
             <li id="QueueId" <c:if test='<%= request.getRequestURI().contains("/queue") %>'>class="active"</c:if>>
 				<a href="queue.form">Queue</a>
             </li>
         </openmrs:hasPrivilege>
-        <openmrs:hasPrivilege privilege="Enter Minor OT Observations">
+        <openmrs:hasPrivilege privilege="Access Minor OT">
             <li id="ObservationId" <c:if test='<%= request.getRequestURI().contains("/observation") %>'>class="active"</c:if>>
 				<a href="observation.form">Enter Observations</a>
             </li>

@@ -21,7 +21,7 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="../includes/js_css.jsp" %>
 <br/>
-<openmrs:require privilege="Access OT" otherwise="/login.htm" redirect="/module/OT/observation.form" />
+<openmrs:require privilege="Access Minor OT" otherwise="/login.htm" redirect="/module/OT/observation.form" />
 <%@ include file="../page/localHeader.jsp" %>
 <%@ include file="../page/minorOTHeader.jsp" %>
 
@@ -69,7 +69,7 @@
 			}),
 			success : function(data) {
 				if (data.indexOf('success')>=0) {
-					location.href = getContextPath() + "/module/OT/queue.form";
+					location.href = getContextPath() + "/module/patientqueue/main.htm";
 				} else {
 					alert(data);
 				}

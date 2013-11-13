@@ -34,23 +34,15 @@
 
 	<privilege>
 		<name>Access OT</name>
-		<description>Allows user to access OT</description>
+		<description>Allows user to access OT Homepage</description>
 	</privilege>
 	<privilege>
-		<name>Access Minor OT Procedures</name>
-		<description>Allows user to access Minor OT Procedures</description>
+		<name>Access Minor OT</name>
+		<description>Allows user to access and modify Minor OT</description>
 	</privilege>
 	<privilege>
-		<name>Access Major OT Procedures</name>
-		<description>Allows user to access Major OT Procedures</description>
-	</privilege>
-	<privilege>
-		<name>Manage Minor OT Queue</name>
-		<description>Allows user to manage Minor OT Queue </description>
-	</privilege>
-	<privilege>
-		<name>Enter Minor OT Observations</name>
-		<description>Allows user to enter Minor OT Observations</description>
+		<name>Access Major OT</name>
+		<description>Allows user to access and modify Major OT</description>
 	</privilege>
 	
 	<!-- Internationalization -->

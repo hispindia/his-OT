@@ -22,7 +22,7 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="../includes/js_css.jsp" %>
 <br/>
-<openmrs:require privilege="Access OT" otherwise="/login.htm" redirect="/module/OT/queue.form" />
+<openmrs:require privilege="Access Minor OT" otherwise="/login.htm" redirect="/module/OT/queue.form" />
 <%@ include file="../page/localHeader.jsp" %>
 <%@ include file="../page/minorOTHeader.jsp" %>
 <script type="text/javascript">
