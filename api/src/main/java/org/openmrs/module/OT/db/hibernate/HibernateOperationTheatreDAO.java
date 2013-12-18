@@ -222,7 +222,7 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			criteria.add(Expression.between("otschedule",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
-			criteria.add(Restrictions.eq("billingStatus", 1));
+//			criteria.add(Restrictions.eq("billingStatus", 1));
 			criteria.add(Restrictions.eq("cancelStatus", 0));
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
@@ -251,7 +251,7 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			criteria.add(Expression.between("otschedule",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
-			criteria.add(Restrictions.eq("billingStatus", 1));
+//			criteria.add(Restrictions.eq("billingStatus", 1));
 			criteria.add(Restrictions.eq("cancelStatus", 0));
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
