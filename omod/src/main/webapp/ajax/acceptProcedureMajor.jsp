@@ -17,12 +17,8 @@
  *  along with OT module.  If not, see <http://www.gnu.org/licenses/>.
  *
 --%>
-<%@ include file="/WEB-INF/template/include.jsp"%>
-<%@ include file="/WEB-INF/template/header.jsp"%>
-<%@ include file="../includes/js_css.jsp" %>
-<br/>
-<openmrs:require privilege="Access OT" otherwise="/login.htm" redirect="/module/OT/majorOT.form" />
-<%@ include file="../page/localHeader.jsp" %>
-<%@ include file="../page/majorOTHeader.jsp" %>
-
-<%@ include file="/WEB-INF/template/footer.jsp"%>
+{
+	"status"        : "${status}",
+	"error"         : "${error}",
+	"acceptedProcedureId": "${acceptedProcedureId}"
+}

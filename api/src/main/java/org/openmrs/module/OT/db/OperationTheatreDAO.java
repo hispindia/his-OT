@@ -28,6 +28,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.module.OT.OperationTheatreService;
+import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.model.MinorOTProcedure;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 
@@ -116,4 +117,66 @@ public interface OperationTheatreDAO {
 	 */
 	public Integer countMinorOTSchedule(Date scheduleDate,
 			List<Concept> procedures, List<Patient> patients, String phrase) throws ParseException;
-}
+
+	/**
+	 * 
+	 * @param startDate
+	 * @param procedures
+	 * @param patients
+	 * @param page
+	 * @param phrase 
+	 * @return List<OpdTestOrder>
+	 * @throws ParseException
+	 */
+	public List<OpdTestOrder> getSchedulesMajorOT(Date scheduleDate, List<Concept> procedures,
+			List<Patient> patients, int page, String phrase) throws ParseException;
+	
+	/**
+	 * 
+	 * @param scheduleDate
+	 * @param procedures
+	 * @param patients
+	 * @param phrase 
+	 * @return Integer
+	 * @throws ParseException
+	 */
+	public Integer countScheduleMajorOT(Date scheduleDate, List<Concept> procedures,
+			List<Patient> patients, String phrase) throws ParseException;
+	
+	
+	/**
+	 * 
+	 * @param opdOrderId
+	 * @return
+	 */
+	public MajorOTProcedure getMajorOTProcedure(Integer orderId);
+	
+	/**
+	 * 
+	 * @param procedure
+	 * @return
+	 */
+	public MajorOTProcedure saveOTProcedure(MajorOTProcedure procedure);
+
+	/**
+	 * 
+	 * @param startDate
+	 * @param procedures
+	 * @param patients
+	 * @param page
+	 * @param phrase 
+	 * @return List
+	 */
+	public List<MajorOTProcedure> getMajorOTSchedules(Date scheduleDate,
+			List<Concept> procedures, List<Patient> patients, Integer page, String phrase) throws ParseException;
+
+	/**
+	 * 
+	 * @param startDate
+	 * @param procedures
+	 * @param patients
+	 * @param phrase 
+	 * @return Integer
+	 */
+	public Integer countMajorOTSchedule(Date scheduleDate,
+			List<Concept> procedures, List<Patient> patients, String phrase) throws ParseException;}

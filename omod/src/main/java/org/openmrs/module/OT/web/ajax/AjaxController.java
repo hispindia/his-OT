@@ -90,4 +90,38 @@ public class AjaxController {
 		else
 			writer.print("fail");
 	}
+	
+	/**
+	 * Accept a OT procedure
+	 * 
+	 * @param orderId
+	 * @param date
+	 * @param model
+	 * @return id of accepted OT procedure
+	 */
+	@RequestMapping(value = "/module/OT/ajax/acceptProcedureMajor.htm", method = RequestMethod.GET)
+	public String acceptTestMajor(@RequestParam("orderId") Integer orderId,
+			@RequestParam("date") String dateStr, Model model) {
+		OperationTheatreService ots = (OperationTheatreService) Context
+				.getService(OperationTheatreService.class);
+		OpdTestOrder schedule = ots.getAcceptedSchedule(orderId);
+		if (schedule != null) {
+			try {
+				Integer acceptedProcedureId = ots.acceptProcedureMajor(schedule);
+				model.addAttribute("acceptedProcedureId", acceptedProcedureId);
+				if (acceptedProcedureId > 0) {
+					model.addAttribute("status", "success");
+				} else {
+					model.addAttribute("status", "fail");
+					if (acceptedProcedureId == OTConstants.ACCEPT_PROCEDURE_RETURN_ERROR_EXISTING_PROCEDURE) {
+						model.addAttribute("error",
+								"Existing accepted Procedure found");
+					}
+				}
+			} catch (Exception e) {
+				model.addAttribute("acceptedProcedureId", "0");
+			}
+		}
+		return "/module/OT/ajax/acceptProcedureMajor";
+	}
 }

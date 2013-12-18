@@ -27,6 +27,7 @@ import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.model.MinorOTProcedure;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,5 +149,84 @@ public interface OperationTheatreService extends OpenmrsService {
 	 */
 	public String observationProcedure(MinorOTProcedure schedule,
 			String observations);
+	
+	/**
+	 * Return all major OT procedures concepts
+	 * 
+	 * @return List<Concept>
+	 **/
+	public List<Concept> getProceduresMajorOT();
+	
+	/**
+	 * Find MajorOT schedules
+	 * 
+	 * @param startDate
+	 * @param phrase
+	 * @param procedures
+	 * @param page
+	 * @return List<OpdTestOrder> 
+	 * @throws ParseException
+	 */
+	public List<OpdTestOrder> getSchedulesMajorOT(Date startDate, String phrase,
+			List<Concept> procedures, int page) throws ParseException;
+	
+	/**
+	 * Count Major OT schedules
+	 * 
+	 * @param startDate
+	 * @param phrase
+	 * @param procedures
+	 * @return Integer
+	 * @throws ParseException
+	 */
+	public Integer countScheduleMajorOT(Date startDate, String phrase, 
+			List<Concept> procedures) throws ParseException;
+
+	
+
+	/**
+	 * 
+	 * @param OrderId
+	 * @return OTProcedure
+	 */
+	public MajorOTProcedure getMajorOTProcedure(Integer OrderId);
+
+	/**
+	 * 
+	 * @param date
+	 * @param phrase
+	 * @param procedures
+	 * @param currentPage
+	 * @return List
+	 */
+	public List<MajorOTProcedure> getMajorOTSchedules(Date startDate, String phrase,
+			List<Concept> procedures, Integer page) throws ParseException;
+
+	/**
+	 * 
+	 * @param startDate
+	 * @param phrase
+	 * @param procedures
+	 * @return integer
+	 */
+	public Integer countMajorOTSchedule(Date startDate, String phrase,
+			List<Concept> procedures) throws ParseException;
+
+	/**
+	 * 
+	 * @param schedule
+	 * @param observations
+	 * @return
+	 */
+	public String observationProcedure(MajorOTProcedure schedule,
+			String observations);
+	
+	/**
+	 * 
+	 * @param schedule
+	 * @return Integer
+	 */
+	public Integer acceptProcedureMajor(OpdTestOrder schedule) throws ParseException;
+
 
 }

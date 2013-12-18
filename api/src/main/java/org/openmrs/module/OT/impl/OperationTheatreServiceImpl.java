@@ -36,6 +36,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.db.OperationTheatreDAO;
+import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.model.MinorOTProcedure;
 import org.openmrs.module.OT.util.OTConstants;
 import org.openmrs.module.hospitalcore.PatientDashboardService;
@@ -145,7 +146,10 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 			return OTConstants.ACCEPT_PROCEDURE_RETURN_ERROR_EXISTING_PROCEDURE;
 		}
 	}
+	
+	
 
+	
 	public String rescheduleProcedure(OpdTestOrder schedule,
 			Date rescheduledDate) {
 		schedule.setOtschedule(rescheduledDate);
@@ -185,5 +189,108 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		schedule.setStatus(OTConstants.PROCEDURE_STATUS_COMPLETED);
 		return OTConstants.OBSERVATION_PROCEDURE_RETURN_SUCCESS;
 	}
+
+	public List<Concept> getProceduresMajorOT() {
+		Concept concept = Context.getConceptService().getConcept(OTConstants.CONCEPT_CLASS_NAME_MAJOR_OT);
+		
+		Collection<ConceptAnswer> allMajorOTProcedures = null;
+		List<Concept> id = new ArrayList<Concept>();
+		if( concept != null )
+		{
+			allMajorOTProcedures = concept.getAnswers();
+			for (ConceptAnswer c: allMajorOTProcedures){
+				id.add(c.getAnswerConcept());
+			}
+			return id;
+		}
+		return null;
+	}
+
+	public List<OpdTestOrder> getSchedulesMajorOT(Date startDate,
+			String phrase, List<Concept> procedures, int page)
+			throws ParseException {
+		
+		List<Patient> patients = Context.getPatientService()
+				.getPatients(phrase);
+		List<OpdTestOrder> schedules = dao.getSchedulesMajorOT(startDate, 
+				procedures, patients, page, phrase);
+		return schedules;
+	}
+
+	public Integer countScheduleMajorOT(Date startDate, String phrase,
+			List<Concept> procedures) throws ParseException {
+
+		List<Patient> patients = Context.getPatientService()
+				.getPatients(phrase);
+		return dao.countScheduleMajorOT(startDate, procedures, patients, phrase);
+	}
+
+	public MajorOTProcedure getMajorOTProcedure(Integer OrderId) {
+		return dao.getMajorOTProcedure(OrderId);
+	}
+
+	public List<MajorOTProcedure> getMajorOTSchedules(Date startDate,
+			String phrase, List<Concept> procedures, Integer page)
+			throws ParseException {
+		
+		List<Patient> patients = Context.getPatientService()
+				.getPatients(phrase);
+		List<MajorOTProcedure> schedules = dao.getMajorOTSchedules(startDate, 
+				procedures, patients, page, phrase);
+		return schedules;
+	}
+
+	public Integer countMajorOTSchedule(Date startDate, String phrase,
+			List<Concept> procedures) throws ParseException {
+		List<Patient> patients = Context.getPatientService()
+				.getPatients(phrase);
+		return dao.countMajorOTSchedule(startDate, procedures, patients, phrase);
+	}
+
+	public String observationProcedure(MajorOTProcedure schedule,
+			String observations) {
+		Encounter encounter = schedule.getEncounter();
+		Concept concept = Context.getConceptService()
+				.getConcept(OTConstants.CONCEPT_CLASS_NAME_PROCEDURE);
+		Obs obs =  dao.getObsInstance(encounter, concept);
+		obs.setComment(observations);
+		schedule.setStatus(OTConstants.PROCEDURE_STATUS_COMPLETED);
+		return OTConstants.OBSERVATION_PROCEDURE_RETURN_SUCCESS;
+	}
+	
+	public Integer acceptProcedureMajor(OpdTestOrder schedule)
+			throws ParseException {
+			Encounter encounter = schedule.getEncounter();
+			Obs pDiagnosis;
+			MajorOTProcedure procedure = dao.getMajorOTProcedure(schedule.getOpdOrderId());
+			OperationTheatreService ots = (OperationTheatreService) Context
+					.getService(OperationTheatreService.class);
+			
+			if (procedure == null) {
+				procedure = new MajorOTProcedure();
+				procedure.setPatient(schedule.getPatient());
+				procedure.setProcedure(schedule.getValueCoded());
+				procedure.setEncounter(encounter);
+				procedure.setOrderId(schedule.getOpdOrderId());
+				
+				pDiagnosis = ots.getDiagnosisOTProcedure(encounter);
+				procedure.setDiagnosis(pDiagnosis.getValueCoded());
+				procedure.setOtSchedule(new Date());
+				procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
+		
+				MajorOTProcedure acceptedProcedure = dao.saveOTProcedure(procedure);
+				logger.info(String
+						.format("Accepting a procedure [procedure=%s, patient=%s, order=%s, diagnosis=%s]",
+								procedure.getProcedure().getConceptId(), procedure
+										.getPatient().getPatientId(), procedure
+										.getOrderId(), procedure
+										.getDiagnosis().getConceptId()));
+				return acceptedProcedure.getMajorOTId();
+			} else {
+				logger.warn(String.format("Existing test for order=%s found.",
+						schedule.getOpdOrderId()));
+				return OTConstants.ACCEPT_PROCEDURE_RETURN_ERROR_EXISTING_PROCEDURE;
+			}
+		}
 
 }

@@ -43,6 +43,26 @@
 			ADD COLUMN `order_id` int(11) NOT NULL;
 		</sql>
 	</diff>
+	
+	<diff>
+		<version>1.0.2</version>
+		<author>Abhishek-Ankur</author>
+		<date>Sep 26th 2013</date>
+		<description>Create a Major OT procedure table</description>
+		<sql>
+			CREATE TABLE IF NOT EXISTS `OTProcedure_majorOT` (
+			  `majorOT_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `status` varchar(30) DEFAULT NULL,
+			  `patient_id` int(11) NOT NULL,
+			  `procedure_id` int(11) NOT NULL,
+			  `diagnosis_id` int(11) NOT NULL,
+			  `OT_schedule_date` datetime NOT NULL,
+			  `encounter_id` int(11) NOT NULL,
+			  `order_id` int(11) NOT NULL,
+			  PRIMARY KEY (`majorOT_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;		
+		</sql>
+	</diff>
 
 	
 </sqldiff>

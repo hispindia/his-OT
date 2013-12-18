@@ -39,6 +39,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.module.OT.db.OperationTheatreDAO;
+import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.model.MinorOTProcedure;
 import org.openmrs.module.OT.util.OTConstants;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
@@ -186,6 +187,131 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 		else {
 			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
 					MinorOTProcedure.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otSchedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.in("procedure", procedures));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			Number rs = (Number) criteria.setProjection(Projections.rowCount())
+					.uniqueResult();
+			return rs != null ? rs.intValue() : 0;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OpdTestOrder> getSchedulesMajorOT(Date scheduleDate,
+			List<Concept> procedures, List<Patient> patients, int page,
+			String phrase) throws ParseException {
+
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return Collections.EMPTY_LIST;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					OpdTestOrder.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otschedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.eq("billingStatus", 1));
+			criteria.add(Restrictions.eq("cancelStatus", 0));
+			criteria.add(Restrictions.in("valueCoded", procedures));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			criteria.addOrder(org.hibernate.criterion.Order.asc("otschedule"));
+			int firstResult = (page - 1) * OTConstants.PAGESIZE;
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(OTConstants.PAGESIZE);
+			return criteria.list();
+		}
+	}
+
+	public Integer countScheduleMajorOT(Date scheduleDate,
+			List<Concept> procedures, List<Patient> patients, String phrase)
+			throws ParseException {
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return 0;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					OpdTestOrder.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otschedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.eq("billingStatus", 1));
+			criteria.add(Restrictions.eq("cancelStatus", 0));
+			criteria.add(Restrictions.in("valueCoded", procedures));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			Number rs = (Number) criteria.setProjection(Projections.rowCount())
+					.uniqueResult();
+			return rs != null ? rs.intValue() : 0;
+		}
+	}
+
+	public MajorOTProcedure getMajorOTProcedure(Integer orderId) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria
+				(MajorOTProcedure.class);
+		criteria.add(Restrictions.eq("orderId", orderId));
+		return (MajorOTProcedure) criteria.uniqueResult();
+	}
+
+	public MajorOTProcedure saveOTProcedure(MajorOTProcedure procedure) {
+		return (MajorOTProcedure) sessionFactory.getCurrentSession().merge(procedure);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MajorOTProcedure> getMajorOTSchedules(Date scheduleDate,
+			List<Concept> procedures, List<Patient> patients, Integer page,
+			String phrase) throws ParseException {
+
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return Collections.EMPTY_LIST;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					MajorOTProcedure.class);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = sdf.format(scheduleDate) + " 00:00:00";
+			String endDate = sdf.format(scheduleDate) + " 23:59:59";
+			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
+					"yyyy-MM-dd hh:mm:ss");
+			criteria.add(Expression.between("otSchedule",
+					dateTimeFormatter.parse(startDate),
+					dateTimeFormatter.parse(endDate)));
+			criteria.add(Restrictions.in("procedure", procedures));
+			criteria.add(Restrictions.ne("status", OTConstants.PROCEDURE_STATUS_COMPLETED));
+			if (!CollectionUtils.isEmpty(patients))
+				criteria.add(Restrictions.in("patient", patients));
+			criteria.addOrder(org.hibernate.criterion.Order.asc("otSchedule"));
+			int firstResult = (page - 1) * OTConstants.PAGESIZE;
+			criteria.setFirstResult(firstResult);
+			criteria.setMaxResults(OTConstants.PAGESIZE);
+			return criteria.list();
+		}
+	}
+
+	public Integer countMajorOTSchedule(Date scheduleDate,
+			List<Concept> procedures, List<Patient> patients, String phrase)
+			throws ParseException {
+
+		if (CollectionUtils.isEmpty(patients) && !phrase.equals(""))
+			return 0;
+		else {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+					MajorOTProcedure.class);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String startDate = sdf.format(scheduleDate) + " 00:00:00";
 			String endDate = sdf.format(scheduleDate) + " 23:59:59";
