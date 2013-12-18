@@ -31,7 +31,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
@@ -222,7 +224,11 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			criteria.add(Expression.between("otschedule",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
-//			criteria.add(Restrictions.eq("billingStatus", 1));
+			Criterion billingStatus = Restrictions.eq("billingStatus", 1);
+			Criterion indoorStatus = Restrictions.eq("indoorStatus", 1);
+			// To get records matching with OR condistions
+			LogicalExpression orExp = Restrictions.or(billingStatus, indoorStatus);
+			criteria.add( orExp );
 			criteria.add(Restrictions.eq("cancelStatus", 0));
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
@@ -251,7 +257,11 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			criteria.add(Expression.between("otschedule",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
-//			criteria.add(Restrictions.eq("billingStatus", 1));
+			Criterion billingStatus = Restrictions.eq("billingStatus", 1);
+			Criterion indoorStatus = Restrictions.eq("indoorStatus", 1);
+			// To get records matching with OR condistions
+			LogicalExpression orExp = Restrictions.or(billingStatus, indoorStatus);
+			criteria.add( orExp );
 			criteria.add(Restrictions.eq("cancelStatus", 0));
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
