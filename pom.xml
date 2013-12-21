@@ -122,6 +122,16 @@
 			<name>OpenMRS Nexus Repository</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
 		</repository>
+		<repository>
+			<id>shimla-nexus-snapshots</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://hospdev.hispindia.org/nexus/content/repositories/version2.0-snapshots</url>
+		</repository>
+		<repository>
+			<id>shimla-nexus-releases</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://hospdev.hispindia.org/nexus/content/repositories/version2.0-releases</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -129,6 +139,22 @@
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>shimla-nexus-snapshots</id>
+			<name>shimla nexus snapshots</name>
+			<url>http://hospdev.hispindia.org/nexus/content/repositories/version2.0-snapshots</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+				<pluginRepository>
+			<id>shimla-nexus-releases</id>
+			<name>shimla nexus releases</name>
+			<url>http://hospdev.hispindia.org/nexus/content/repositories/version2.0-releases</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
