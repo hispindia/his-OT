@@ -15,52 +15,34 @@
 
 
 	<diff>
-		<version>1.0.0</version>
-		<author>Abhishek-Ankur</author>
-		<date>Sep 26th 2013</date>
+		<version>0.0.1</version>
+		<author>Ghanshyam</author>
+		<date>28 March 2014</date>
 		<description>Create a OT procedure table</description>
 		<sql>
-			CREATE TABLE IF NOT EXISTS `OTProcedure_minorOT` (
-			  `minorOT_id` int(11) NOT NULL AUTO_INCREMENT,
+			CREATE TABLE IF NOT EXISTS `ot_minor` (
+			  `minorot_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `status` varchar(30) DEFAULT NULL,
 			  `patient_id` int(11) NOT NULL,
 			  `procedure_id` int(11) NOT NULL,
 			  `diagnosis_id` int(11) NOT NULL,
-			  `OT_schedule_date` datetime NOT NULL,
+			  `ot_schedule_date` datetime NOT NULL,
 			  `encounter_id` int(11) NOT NULL,
-			  PRIMARY KEY (`minorOT_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;		
-		</sql>
-	</diff>
-	
-	<diff>
-		<version>1.0.1</version>
-		<author>Abhishek-Ankur</author>
-		<date>Oct 2nd 2013</date>
-		<description>Alter OT Procedure Table</description>
-		<sql>
-			ALTER TABLE OTProcedure_minorOT
-			ADD COLUMN `order_id` int(11) NOT NULL;
-		</sql>
-	</diff>
-	
-	<diff>
-		<version>1.0.2</version>
-		<author>Abhishek-Ankur</author>
-		<date>Sep 26th 2013</date>
-		<description>Create a Major OT procedure table</description>
-		<sql>
-			CREATE TABLE IF NOT EXISTS `OTProcedure_majorOT` (
-			  `majorOT_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `opd_order_id` int(11) NOT NULL,
+			  PRIMARY KEY (`minorot_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;	
+			
+			CREATE TABLE IF NOT EXISTS `ot_major` (
+			  `majorot_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `status` varchar(30) DEFAULT NULL,
 			  `patient_id` int(11) NOT NULL,
 			  `procedure_id` int(11) NOT NULL,
 			  `diagnosis_id` int(11) NOT NULL,
-			  `OT_schedule_date` datetime NOT NULL,
+			  `ot_schedule_date` datetime NOT NULL,
 			  `encounter_id` int(11) NOT NULL,
-			  `order_id` int(11) NOT NULL,
-			  PRIMARY KEY (`majorOT_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;		
+			  `opd_order_id` int(11) NOT NULL,
+			  PRIMARY KEY (`majorot_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;			
 		</sql>
 	</diff>
 

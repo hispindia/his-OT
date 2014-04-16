@@ -62,7 +62,8 @@
 	<!-- /Internationalization -->
 
 	<mappingFiles>
-		OperationTheatre.hbm.xml
+		MinorOTProcedure.hbm.xml
+		MajorOTProcedure.hbm.xml
 	</mappingFiles>
 
 </module>

@@ -25,6 +25,10 @@ import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.web.util.OTScheduleModel;
 import org.openmrs.module.OT.web.util.OperationTheatreUtil_Major;
+import org.openmrs.module.hospitalcore.HospitalCoreService;
+import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
+import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,7 +43,10 @@ public class ObservationProcedureController {
 	public MajorOTProcedure getOrder(@RequestParam("orderId") Integer orderId) {
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
-		return ots.getMajorOTProcedure(orderId);
+		HospitalCoreService hcs = (HospitalCoreService) Context
+		.getService(HospitalCoreService.class);
+		OpdTestOrder opdOrderId=hcs.getOpdTestOrder(orderId);
+		return ots.getMajorOTProcedure(opdOrderId);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -67,6 +74,8 @@ public class ObservationProcedureController {
 				model.addAttribute("status", "Failed");
 			}
 		}
-		return "/module/OT/majorOT/observationResponse";
+		PatientQueueService queueService = Context.getService(PatientQueueService.class);
+		OpdPatientQueueLog opdPatientQueueLog=queueService.getOpdPatientQueueLogByEncounter(schedule.getEncounter());
+		return "redirect:/module/patientdashboard/main.htm?patientId="+opdPatientQueueLog.getPatient().getPatientId() + "&opdId=" + opdPatientQueueLog.getOpdConcept().getConceptId() + "&referralId=" + opdPatientQueueLog.getReferralConcept().getConceptId() + "&opdLogId=" + opdPatientQueueLog.getId();
 	}
 }

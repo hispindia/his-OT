@@ -24,12 +24,12 @@ public class OTConstants {
 	private static final String MODULE_ID = "OT";
 	public static final Integer PAGESIZE = 20;
 	public static final String CONCEPT_CLASS_NAME_DIAGNOSIS = "PROVISIONAL DIAGNOSIS";
-	public static final String CONCEPT_CLASS_NAME_MINOR_OT = "MINOR OT PROCEDURE";
+	public static final String CONCEPT_CLASS_NAME_MINOR_OT = "MINOR OPERATION";
 	public static final Integer ACCEPT_PROCEDURE_RETURN_ERROR_EXISTING_PROCEDURE = -1;
 	public static final String PROCEDURE_STATUS_ACCEPTED = "accepted";
 	public static final String RESCHEDULE_PROCEDURE_RETURN_SUCCESS = "success";
 	public static final String CONCEPT_CLASS_NAME_PROCEDURE = "POST FOR PROCEDURE";
 	public static final String OBSERVATION_PROCEDURE_RETURN_SUCCESS = "success";
 	public static final String PROCEDURE_STATUS_COMPLETED = "completed";
-	public static final String CONCEPT_CLASS_NAME_MAJOR_OT = "MAJOR OT PROCEDURE";
+	public static final String CONCEPT_CLASS_NAME_MAJOR_OT = "MAJOR OPERATION";
 }

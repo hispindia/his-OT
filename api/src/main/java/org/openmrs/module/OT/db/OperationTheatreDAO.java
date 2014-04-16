@@ -72,7 +72,7 @@ public interface OperationTheatreDAO {
 	 * @param concept
 	 * @return Obs
 	 */
-	public Obs getObsInstance(Encounter encounter, Concept concept);
+	public Obs getObsInstance(Encounter encounter,Concept valueCoded);
 	
 	/**
 	 * 
@@ -86,7 +86,7 @@ public interface OperationTheatreDAO {
 	 * @param opdOrderId
 	 * @return
 	 */
-	public MinorOTProcedure getMinorOTProcedure(Integer orderId);
+	public MinorOTProcedure getMinorOTProcedure(OpdTestOrder opdOrderId);
 	
 	/**
 	 * 
@@ -149,7 +149,7 @@ public interface OperationTheatreDAO {
 	 * @param opdOrderId
 	 * @return
 	 */
-	public MajorOTProcedure getMajorOTProcedure(Integer orderId);
+	public MajorOTProcedure getMajorOTProcedure(OpdTestOrder opdOrderId);
 	
 	/**
 	 * 

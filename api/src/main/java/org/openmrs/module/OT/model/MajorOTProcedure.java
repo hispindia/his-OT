@@ -26,6 +26,7 @@ import java.util.Date;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
+import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 
 public class MajorOTProcedure implements Serializable {
 	
@@ -41,7 +42,7 @@ public class MajorOTProcedure implements Serializable {
 	private Concept diagnosis;
 	private Encounter encounter;
 	private Date otSchedule;
-	private Integer orderId;
+	private OpdTestOrder opdOrderId;
 	
 	public Integer getMajorOTId() {
 		return majorOTId;
@@ -60,12 +61,6 @@ public class MajorOTProcedure implements Serializable {
 	}
 	public void setOtSchedule(Date otSchedule) {
 		this.otSchedule = otSchedule;
-	}
-	public Integer getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
 	}
 	public Patient getPatient() {
 		return patient;
@@ -90,5 +85,11 @@ public class MajorOTProcedure implements Serializable {
 	}
 	public void setEncounter(Encounter encounter) {
 		this.encounter = encounter;
+	}
+	public OpdTestOrder getOpdOrderId() {
+		return opdOrderId;
+	}
+	public void setOpdOrderId(OpdTestOrder opdOrderId) {
+		this.opdOrderId = opdOrderId;
 	}
 }

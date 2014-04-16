@@ -31,9 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
@@ -82,7 +80,7 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			String endDate = sdf.format(scheduleDate) + " 23:59:59";
 			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
 					"yyyy-MM-dd hh:mm:ss");
-			criteria.add(Expression.between("otschedule",
+			criteria.add(Expression.between("scheduleDate",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
 			criteria.add(Restrictions.eq("billingStatus", 1));
@@ -90,7 +88,7 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
 				criteria.add(Restrictions.in("patient", patients));
-			criteria.addOrder(org.hibernate.criterion.Order.asc("otschedule"));
+			criteria.addOrder(org.hibernate.criterion.Order.asc("scheduleDate"));
 			int firstResult = (page - 1) * OTConstants.PAGESIZE;
 			criteria.setFirstResult(firstResult);
 			criteria.setMaxResults(OTConstants.PAGESIZE);
@@ -113,7 +111,7 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			String endDate = sdf.format(scheduleDate) + " 23:59:59";
 			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
 					"yyyy-MM-dd hh:mm:ss");
-			criteria.add(Expression.between("otschedule",
+			criteria.add(Expression.between("scheduleDate",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
 			criteria.add(Restrictions.eq("billingStatus", 1));
@@ -127,11 +125,11 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 		}
 	}
 
-	public Obs getObsInstance(Encounter encounter, Concept concept) {
+	public Obs getObsInstance(Encounter encounter,Concept valueCoded) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria
 				(Obs.class);
 		criteria.add(Restrictions.eq("encounter", encounter));
-		criteria.add(Restrictions.eq("concept", concept));
+		criteria.add(Restrictions.eq("valueCoded", valueCoded));
 		return (Obs) criteria.uniqueResult();
 	}
 
@@ -142,10 +140,10 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 		return (OpdTestOrder) criteria.uniqueResult();
 	}
 
-	public MinorOTProcedure getMinorOTProcedure(Integer orderId) {
+	public MinorOTProcedure getMinorOTProcedure(OpdTestOrder opdOrderId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria
 				(MinorOTProcedure.class);
-		criteria.add(Restrictions.eq("orderId", orderId));
+		criteria.add(Restrictions.eq("opdOrderId", opdOrderId));
 		return (MinorOTProcedure) criteria.uniqueResult();
 	}
 
@@ -221,19 +219,20 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			String endDate = sdf.format(scheduleDate) + " 23:59:59";
 			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
 					"yyyy-MM-dd hh:mm:ss");
-			criteria.add(Expression.between("otschedule",
+			criteria.add(Expression.between("scheduleDate",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
-			Criterion billingStatus = Restrictions.eq("billingStatus", 1);
-			Criterion indoorStatus = Restrictions.eq("indoorStatus", 1);
+			//Criterion billingStatus = Restrictions.eq("billingStatus", 1);
+			//Criterion indoorStatus = Restrictions.eq("indoorStatus", 1);
 			// To get records matching with OR condistions
-			LogicalExpression orExp = Restrictions.or(billingStatus, indoorStatus);
-			criteria.add( orExp );
+			//LogicalExpression orExp = Restrictions.or(billingStatus, indoorStatus);
+			//criteria.add( orExp );
+			criteria.add(Restrictions.eq("billingStatus", 1));
 			criteria.add(Restrictions.eq("cancelStatus", 0));
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
 				criteria.add(Restrictions.in("patient", patients));
-			criteria.addOrder(org.hibernate.criterion.Order.asc("otschedule"));
+			criteria.addOrder(org.hibernate.criterion.Order.asc("scheduleDate"));
 			int firstResult = (page - 1) * OTConstants.PAGESIZE;
 			criteria.setFirstResult(firstResult);
 			criteria.setMaxResults(OTConstants.PAGESIZE);
@@ -254,14 +253,15 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 			String endDate = sdf.format(scheduleDate) + " 23:59:59";
 			SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(
 					"yyyy-MM-dd hh:mm:ss");
-			criteria.add(Expression.between("otschedule",
+			criteria.add(Expression.between("scheduleDate",
 					dateTimeFormatter.parse(startDate),
 					dateTimeFormatter.parse(endDate)));
-			Criterion billingStatus = Restrictions.eq("billingStatus", 1);
-			Criterion indoorStatus = Restrictions.eq("indoorStatus", 1);
+			//Criterion billingStatus = Restrictions.eq("billingStatus", 1);
+			//Criterion indoorStatus = Restrictions.eq("indoorStatus", 1);
 			// To get records matching with OR condistions
-			LogicalExpression orExp = Restrictions.or(billingStatus, indoorStatus);
-			criteria.add( orExp );
+			//LogicalExpression orExp = Restrictions.or(billingStatus, indoorStatus);
+			//criteria.add( orExp );
+			criteria.add(Restrictions.eq("billingStatus", 1));
 			criteria.add(Restrictions.eq("cancelStatus", 0));
 			criteria.add(Restrictions.in("valueCoded", procedures));
 			if (!CollectionUtils.isEmpty(patients))
@@ -272,10 +272,10 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 		}
 	}
 
-	public MajorOTProcedure getMajorOTProcedure(Integer orderId) {
+	public MajorOTProcedure getMajorOTProcedure(OpdTestOrder opdOrderId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria
 				(MajorOTProcedure.class);
-		criteria.add(Restrictions.eq("orderId", orderId));
+		criteria.add(Restrictions.eq("opdOrderId", opdOrderId));
 		return (MajorOTProcedure) criteria.uniqueResult();
 	}
 

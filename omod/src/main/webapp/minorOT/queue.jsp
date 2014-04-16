@@ -62,7 +62,7 @@
 	function acceptProcedure(orderId) {
 		jQuery.ajax({
 			type : "GET",
-			url : getContextPath() + "/module/OT/ajax/acceptProcedure.htm",
+			url : getContextPath() + "/module/OT/ajax/acceptProcedureMinor.htm",
 			data : ({
 				orderId : orderId,
 				date	: jQuery("#date").val(),

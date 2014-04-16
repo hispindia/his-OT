@@ -69,11 +69,11 @@ public class OperationTheatreUtil_Major {
 		OTScheduleModel osm = new OTScheduleModel();
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
-		MajorOTProcedure procedure = ots.getMajorOTProcedure(schedule.getOpdOrderId());;
+		MajorOTProcedure procedure = ots.getMajorOTProcedure(schedule);;
 		if (encounter != null && encounter.getAllObs().size() != 0) {
 			if (procedure == null) {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				osm.setStartDate(sdf.format(schedule.getOtschedule()));
+				osm.setStartDate(sdf.format(schedule.getScheduleDate()));
 				osm.setPatientIdentifier(schedule.getPatient().getPatientIdentifier().getIdentifier());
 				osm.setPatientName(PatientUtils.getFullName(schedule.getPatient()));
 				osm.setGender(schedule.getPatient().getGender());
@@ -85,13 +85,13 @@ public class OperationTheatreUtil_Major {
 				osm.setProcedure(schedule.getValueCoded().getName().toString());
 				osm.setStatus(null);
 				
-				pDiagnosis = ots.getDiagnosisOTProcedure(encounter);
+				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 				osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 		
 			} else {
 				if (!procedure.getStatus().equals(OTConstants.PROCEDURE_STATUS_COMPLETED)) {
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-					osm.setStartDate(sdf.format(schedule.getOtschedule()));
+					osm.setStartDate(sdf.format(schedule.getScheduleDate()));
 					osm.setPatientIdentifier(schedule.getPatient().getPatientIdentifier().getIdentifier());
 					osm.setPatientName(PatientUtils.getFullName(schedule.getPatient()));
 					osm.setGender(schedule.getPatient().getGender());
@@ -103,7 +103,7 @@ public class OperationTheatreUtil_Major {
 					osm.setProcedure(schedule.getValueCoded().getName().toString());
 					osm.setStatus(procedure.getStatus());
 					
-					pDiagnosis = ots.getDiagnosisOTProcedure(encounter);
+					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 					osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 				} else {
 					return null;
@@ -161,7 +161,7 @@ public class OperationTheatreUtil_Major {
 			osm.setPatientName(PatientUtils.getFullName(schedule.getPatient()));
 			osm.setGender(schedule.getPatient().getGender());
 			osm.setAge(schedule.getPatient().getAge());
-			osm.setOrderId(schedule.getOrderId());
+			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
 			osm.setProcedure(schedule.getProcedure().getName().toString());
 			osm.setpDiagnosis(schedule.getDiagnosis().getName().toString());
 			osm.setStatus(schedule.getStatus());
@@ -181,7 +181,7 @@ public class OperationTheatreUtil_Major {
 		OTScheduleModel osm = new OTScheduleModel();
 		
 		if (encounter != null && encounter.getAllObs().size() != 0) {
-			osm.setOrderId(schedule.getOrderId());
+			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
 		}
 		return osm;
 	}

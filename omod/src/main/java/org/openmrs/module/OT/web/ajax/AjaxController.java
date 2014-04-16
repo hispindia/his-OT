@@ -48,7 +48,7 @@ public class AjaxController {
 	 * @param model
 	 * @return id of accepted OT procedure
 	 */
-	@RequestMapping(value = "/module/OT/ajax/acceptProcedure.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "/module/OT/ajax/acceptProcedureMinor.htm", method = RequestMethod.GET)
 	public String acceptTest(@RequestParam("orderId") Integer orderId,
 			@RequestParam("date") String dateStr, Model model) {
 		OperationTheatreService ots = (OperationTheatreService) Context
@@ -56,7 +56,7 @@ public class AjaxController {
 		OpdTestOrder schedule = ots.getAcceptedSchedule(orderId);
 		if (schedule != null) {
 			try {
-				Integer acceptedProcedureId = ots.acceptProcedure(schedule);
+				Integer acceptedProcedureId = ots.acceptProcedureMinor(schedule);
 				model.addAttribute("acceptedProcedureId", acceptedProcedureId);
 				if (acceptedProcedureId > 0) {
 					model.addAttribute("status", "success");

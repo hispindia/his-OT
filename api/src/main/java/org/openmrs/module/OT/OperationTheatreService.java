@@ -88,7 +88,7 @@ public interface OperationTheatreService extends OpenmrsService {
 	 * @param encounterId
 	 * @return String
 	 */
-	public Obs getDiagnosisOTProcedure(Encounter encounterId);
+	public Obs getDiagnosisOTProcedure(Encounter encounter,Concept valueCoded);
 
 	/**
 	 * 
@@ -102,7 +102,7 @@ public interface OperationTheatreService extends OpenmrsService {
 	 * @param schedule
 	 * @return Integer
 	 */
-	public Integer acceptProcedure(OpdTestOrder schedule) throws ParseException;
+	public Integer acceptProcedureMinor(OpdTestOrder schedule) throws ParseException;
 
 	/**
 	 * 
@@ -118,7 +118,7 @@ public interface OperationTheatreService extends OpenmrsService {
 	 * @param OrderId
 	 * @return OTProcedure
 	 */
-	public MinorOTProcedure getMinorOTProcedure(Integer OrderId);
+	public MinorOTProcedure getMinorOTProcedure(OpdTestOrder opdOrderId);
 
 	/**
 	 * 
@@ -189,7 +189,7 @@ public interface OperationTheatreService extends OpenmrsService {
 	 * @param OrderId
 	 * @return OTProcedure
 	 */
-	public MajorOTProcedure getMajorOTProcedure(Integer OrderId);
+	public MajorOTProcedure getMajorOTProcedure(OpdTestOrder opdOrderId);
 
 	/**
 	 * 

@@ -20,9 +20,9 @@
 
 package org.openmrs.module.OT.extension.html;
 
-import org.openmrs.module.Extension;
+import org.openmrs.module.web.extension.LinkExt;
 
-public class OTHeader extends Extension {
+public class OTHeader extends LinkExt {
 
 	public MEDIA_TYPE getMediaType() {
 		return MEDIA_TYPE.html;
