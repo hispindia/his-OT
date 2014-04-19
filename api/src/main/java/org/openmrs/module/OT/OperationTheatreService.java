@@ -88,7 +88,7 @@ public interface OperationTheatreService extends OpenmrsService {
 	 * @param encounterId
 	 * @return String
 	 */
-	public Obs getDiagnosisOTProcedure(Encounter encounter,Concept valueCoded);
+	public List<Obs> getDiagnosisOTProcedure(Encounter encounter,Concept concept,Date date);
 
 	/**
 	 * 

@@ -72,7 +72,9 @@ public interface OperationTheatreDAO {
 	 * @param concept
 	 * @return Obs
 	 */
-	public Obs getObsInstance(Encounter encounter,Concept valueCoded);
+	public List<Obs> getObsInstanceForDiagnosis(Encounter encounter,Concept concept,Date date);
+	
+	public Obs getObsInstanceForProcedure(Encounter encounter,Concept valueCoded,Date date);
 	
 	/**
 	 * 

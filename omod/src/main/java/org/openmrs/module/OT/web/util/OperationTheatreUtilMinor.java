@@ -30,12 +30,12 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.OT.OperationTheatreService;
-import org.openmrs.module.OT.model.MajorOTProcedure;
+import org.openmrs.module.OT.model.MinorOTProcedure;
 import org.openmrs.module.OT.util.OTConstants;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
 
-public class OperationTheatreUtil_Major {
+public class OperationTheatreUtilMinor {
 
 	/**
 	 * Generate a list of OT Schedule Model using schedules
@@ -65,11 +65,11 @@ public class OperationTheatreUtil_Major {
 	private static OTScheduleModel generateModel(OpdTestOrder schedule) {
 	
 		Encounter encounter = schedule.getEncounter();
-		Obs pDiagnosis;
+		List<Obs> pDiagnosis;
 		OTScheduleModel osm = new OTScheduleModel();
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
-		MajorOTProcedure procedure = ots.getMajorOTProcedure(schedule);;
+		MinorOTProcedure procedure = ots.getMinorOTProcedure(schedule);;
 		if (encounter != null && encounter.getAllObs().size() != 0) {
 			if (procedure == null) {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -85,8 +85,14 @@ public class OperationTheatreUtil_Major {
 				osm.setProcedure(schedule.getValueCoded().getName().toString());
 				osm.setStatus(null);
 				
-				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
-				osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
+				//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
+				//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
+				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+				String abc="";
+				for(Obs pDiagnos:pDiagnosis){
+					abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+				}
+				osm.setpDiagnosis(abc);
 		
 			} else {
 				if (!procedure.getStatus().equals(OTConstants.PROCEDURE_STATUS_COMPLETED)) {
@@ -103,8 +109,14 @@ public class OperationTheatreUtil_Major {
 					osm.setProcedure(schedule.getValueCoded().getName().toString());
 					osm.setStatus(procedure.getStatus());
 					
-					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
-					osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
+					//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
+					//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
+					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+					String abc="";
+					for(Obs pDiagnos:pDiagnosis){
+						abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+					}
+					osm.setpDiagnosis(abc);
 				} else {
 					return null;
 				}
@@ -134,9 +146,9 @@ public class OperationTheatreUtil_Major {
 	 * @return List
 	 */
 	public static List<OTScheduleModel> generateObsModelsFromSchedules(
-			List<MajorOTProcedure> otSchedules) {
+			List<MinorOTProcedure> otSchedules) {
 		List<OTScheduleModel> models = new ArrayList<OTScheduleModel>();
-		for (MajorOTProcedure schedule : otSchedules) {
+		for (MinorOTProcedure schedule : otSchedules) {
 			OTScheduleModel osm = generateObsModel(schedule);
 			models.add(osm);
 		}
@@ -149,7 +161,7 @@ public class OperationTheatreUtil_Major {
 	 * @param schedule
 	 * @return 
 	 */
-	private static OTScheduleModel generateObsModel(MajorOTProcedure schedule) {
+	private static OTScheduleModel generateObsModel(MinorOTProcedure schedule) {
 		Encounter encounter = schedule.getEncounter();
 		OTScheduleModel osm = new OTScheduleModel();
 		
@@ -163,7 +175,7 @@ public class OperationTheatreUtil_Major {
 			osm.setAge(schedule.getPatient().getAge());
 			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
 			osm.setProcedure(schedule.getProcedure().getName().toString());
-			osm.setpDiagnosis(schedule.getDiagnosis().getName().toString());
+			osm.setpDiagnosis(schedule.getDiagnosis());
 			osm.setStatus(schedule.getStatus());
 		}
 		return osm;
@@ -176,7 +188,7 @@ public class OperationTheatreUtil_Major {
 	 * @return
 	 */
 	public static OTScheduleModel generateObservationFormModel(
-			MajorOTProcedure schedule) {
+			MinorOTProcedure schedule) {
 		Encounter encounter = schedule.getEncounter();
 		OTScheduleModel osm = new OTScheduleModel();
 		

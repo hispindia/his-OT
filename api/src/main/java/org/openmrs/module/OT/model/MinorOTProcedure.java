@@ -39,7 +39,7 @@ public class MinorOTProcedure implements Serializable {
 	private String status;
 	private Patient patient;
 	private Concept procedure;
-	private Concept diagnosis;
+	private String diagnosis;
 	private Encounter encounter;
 	private Date otSchedule;
 	private OpdTestOrder opdOrderId;
@@ -74,10 +74,10 @@ public class MinorOTProcedure implements Serializable {
 	public void setProcedure(Concept procedure) {
 		this.procedure = procedure;
 	}
-	public Concept getDiagnosis() {
+	public String getDiagnosis() {
 		return diagnosis;
 	}
-	public void setDiagnosis(Concept diagnosis) {
+	public void setDiagnosis(String diagnosis) {
 		this.diagnosis = diagnosis;
 	}
 	public Encounter getEncounter() {

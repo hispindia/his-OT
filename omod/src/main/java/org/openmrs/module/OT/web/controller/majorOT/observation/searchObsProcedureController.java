@@ -35,7 +35,7 @@ import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.util.OTConstants;
 import org.openmrs.module.OT.util.PagingUtil;
 import org.openmrs.module.OT.web.util.OTScheduleModel;
-import org.openmrs.module.OT.web.util.OperationTheatreUtil_Major;
+import org.openmrs.module.OT.web.util.OperationTheatreUtilMajor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,7 +83,7 @@ public class searchObsProcedureController {
 				currentPage = 1;	
 			List<MajorOTProcedure> otSchedules = ots.getMajorOTSchedules(date, phrase, procedures, 
 					currentPage);
-			List<OTScheduleModel> otProcedures = OperationTheatreUtil_Major.generateObsModelsFromSchedules(
+			List<OTScheduleModel> otProcedures = OperationTheatreUtilMajor.generateObsModelsFromSchedules(
 					otSchedules);
 			
 			int total = ots.countMajorOTSchedule(date, phrase, procedures);

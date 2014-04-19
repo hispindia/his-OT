@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.util.OTConstants;
-import org.openmrs.module.OT.web.util.OperationTheatreUtil;
+import org.openmrs.module.OT.web.util.OperationTheatreUtilMinor;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,10 +81,10 @@ public class AjaxController {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter writer = response.getWriter();
 		
-		Date rescheduleDate = OperationTheatreUtil.parseDate(rescheduleDateStr + " " + rescheduledTimeStr);
+		Date rescheduleDate = OperationTheatreUtilMinor.parseDate(rescheduleDateStr + " " + rescheduledTimeStr);
 		Date now = new Date();
-		String currentDateStr = OperationTheatreUtil.formatDate(now) + " 12:00 AM";
-		Date currentDate = OperationTheatreUtil.parseDate(currentDateStr);
+		String currentDateStr = OperationTheatreUtilMinor.formatDate(now) + " 12:00 AM";
+		Date currentDate = OperationTheatreUtilMinor.parseDate(currentDateStr);
 		if(rescheduleDate.after(currentDate))
 			writer.print("success");
 		else

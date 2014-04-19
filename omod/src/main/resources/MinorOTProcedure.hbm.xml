@@ -14,7 +14,7 @@
 			<many-to-one name="patient" column="patient_id" class="org.openmrs.Patient" />
 			<many-to-one name="encounter" column="encounter_id" class="org.openmrs.Encounter" />
 			<many-to-one name="procedure" column="procedure_id" class="org.openmrs.Concept" />
-			<many-to-one name="diagnosis" column="diagnosis_id" class="org.openmrs.Concept" />
+			<property name="diagnosis" column="diagnosis" />
 			<property name="status" column="status" />
 			<property name="otSchedule" type="java.util.Date" column="ot_schedule_date"
 				length="19" not-null="true" />

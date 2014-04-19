@@ -24,7 +24,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.web.util.OTScheduleModel;
-import org.openmrs.module.OT.web.util.OperationTheatreUtil_Major;
+import org.openmrs.module.OT.web.util.OperationTheatreUtilMajor;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.PatientQueueService;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
@@ -53,7 +53,7 @@ public class ObservationProcedureController {
 	public String showObservationForm(Model model,
 			@ModelAttribute("schedule") MajorOTProcedure schedule) {
 		if (schedule!= null) {
-			OTScheduleModel otm = OperationTheatreUtil_Major.generateObservationFormModel(schedule);
+			OTScheduleModel otm = OperationTheatreUtilMajor.generateObservationFormModel(schedule);
 			model.addAttribute("procedure", otm);
 		}
 		return "/module/OT/majorOT/observationForm";

@@ -102,10 +102,10 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		return dao.countScheduleMinorOT(startDate, procedures, patients, phrase);
 	}
 
-	public Obs getDiagnosisOTProcedure(Encounter encounter,Concept valueCoded) {
+	public List<Obs> getDiagnosisOTProcedure(Encounter encounter,Concept concept,Date date) {
 		//Concept concept = Context.getConceptService()
 		//		.getConcept(OTConstants.CONCEPT_CLASS_NAME_DIAGNOSIS);
-		return dao.getObsInstance(encounter,valueCoded);
+		return dao.getObsInstanceForDiagnosis(encounter,concept,date);
 	}
 	
 	public OpdTestOrder getAcceptedSchedule(Integer orderId) {
@@ -115,7 +115,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 	public Integer acceptProcedureMinor(OpdTestOrder schedule)
 		throws ParseException {
 		Encounter encounter = schedule.getEncounter();
-		Obs pDiagnosis;
+		List<Obs> pDiagnosis;
 		MinorOTProcedure procedure = dao.getMinorOTProcedure(schedule);
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
@@ -127,8 +127,12 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 			procedure.setEncounter(encounter);
 			procedure.setOpdOrderId(schedule);
 			
-			pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
-			procedure.setDiagnosis(pDiagnosis.getValueCoded());
+			pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+			String abc="";
+			for(Obs pDiagnos:pDiagnosis){
+				abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+			}
+			procedure.setDiagnosis(abc);
 			procedure.setOtSchedule(new Date());
 			procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
 	
@@ -138,7 +142,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 							procedure.getProcedure().getConceptId(), procedure
 									.getPatient().getPatientId(), procedure
 									.getOpdOrderId(), procedure
-									.getDiagnosis().getConceptId()));
+									.getDiagnosis()));
 			return acceptedProcedure.getMinorOTId();
 		} else {
 			logger.warn(String.format("Existing test for order=%s found.",
@@ -184,7 +188,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		Encounter encounter = schedule.getEncounter();
 		//Concept concept = Context.getConceptService()
 		//		.getConcept(OTConstants.CONCEPT_CLASS_NAME_PROCEDURE);
-		Obs obs =  dao.getObsInstance(encounter, schedule.getOpdOrderId().getValueCoded());
+		Obs obs =  dao.getObsInstanceForProcedure(encounter, schedule.getOpdOrderId().getValueCoded(),schedule.getOpdOrderId().getCreatedOn());
 		obs.setComment(observations);
 		schedule.setStatus(OTConstants.PROCEDURE_STATUS_COMPLETED);
 		return OTConstants.OBSERVATION_PROCEDURE_RETURN_SUCCESS;
@@ -252,7 +256,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 		Encounter encounter = schedule.getEncounter();
 		//Concept concept = Context.getConceptService()
 		//		.getConcept(OTConstants.CONCEPT_CLASS_NAME_PROCEDURE);
-		Obs obs =  dao.getObsInstance(encounter, schedule.getOpdOrderId().getValueCoded());
+		Obs obs =  dao.getObsInstanceForProcedure(encounter, schedule.getOpdOrderId().getValueCoded(),schedule.getOpdOrderId().getCreatedOn());
 		obs.setComment(observations);
 		schedule.setStatus(OTConstants.PROCEDURE_STATUS_COMPLETED);
 		return OTConstants.OBSERVATION_PROCEDURE_RETURN_SUCCESS;
@@ -261,7 +265,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 	public Integer acceptProcedureMajor(OpdTestOrder schedule)
 			throws ParseException {
 			Encounter encounter = schedule.getEncounter();
-			Obs pDiagnosis;
+			List<Obs> pDiagnosis;
 			MajorOTProcedure procedure = dao.getMajorOTProcedure(schedule);
 			OperationTheatreService ots = (OperationTheatreService) Context
 					.getService(OperationTheatreService.class);
@@ -273,8 +277,12 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 				procedure.setEncounter(encounter);
 				procedure.setOpdOrderId(schedule);
 				
-				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
-				procedure.setDiagnosis(pDiagnosis.getValueCoded());
+				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+				String abc="";
+				for(Obs pDiagnos:pDiagnosis){
+					abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+				}
+				procedure.setDiagnosis(abc);
 				procedure.setOtSchedule(new Date());
 				procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
 		
@@ -284,7 +292,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 								procedure.getProcedure().getConceptId(), procedure
 										.getPatient().getPatientId(), procedure
 										.getOpdOrderId(), procedure
-										.getDiagnosis().getConceptId()));
+										.getDiagnosis()));
 				return acceptedProcedure.getMajorOTId();
 			} else {
 				logger.warn(String.format("Existing test for order=%s found.",

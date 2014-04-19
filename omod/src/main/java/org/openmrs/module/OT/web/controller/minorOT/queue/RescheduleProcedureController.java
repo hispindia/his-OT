@@ -28,7 +28,7 @@ import java.util.Date;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.web.util.OTScheduleModel;
-import org.openmrs.module.OT.web.util.OperationTheatreUtil;
+import org.openmrs.module.OT.web.util.OperationTheatreUtilMinor;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,11 +53,11 @@ public class RescheduleProcedureController {
 			@RequestParam(value="type", required=false) String type,
 			@ModelAttribute("schedule") OpdTestOrder schedule) {
 		if (schedule != null) {
-			OTScheduleModel otm = OperationTheatreUtil.generateRescheduleModel(schedule);
+			OTScheduleModel otm = OperationTheatreUtilMinor.generateRescheduleModel(schedule);
 			model.addAttribute("procedure", otm);
 			Calendar c = Calendar.getInstance();
 			c.add(Calendar.DATE, 1);
-			model.addAttribute("currentDate", OperationTheatreUtil.formatDate(c.getTime()));
+			model.addAttribute("currentDate", OperationTheatreUtilMinor.formatDate(c.getTime()));
 		}		
 		return "/module/OT/minorOT/rescheduleForm";
 	}
@@ -72,7 +72,7 @@ public class RescheduleProcedureController {
 					.getService(OperationTheatreService.class);
 			Date rescheduledDate;
 			try {
-				rescheduledDate = OperationTheatreUtil.parseDate(rescheduledDateStr + " " + rescheduledTimeStr);
+				rescheduledDate = OperationTheatreUtilMinor.parseDate(rescheduledDateStr + " " + rescheduledTimeStr);
 				String status = ots.rescheduleProcedure(schedule, rescheduledDate);
 				model.addAttribute("status", status);
 			} catch (ParseException e) {

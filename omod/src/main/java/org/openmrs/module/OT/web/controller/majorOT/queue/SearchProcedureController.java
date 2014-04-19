@@ -32,7 +32,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.util.OTConstants;
 import org.openmrs.module.OT.util.PagingUtil;
-import org.openmrs.module.OT.web.util.OperationTheatreUtil_Major;
+import org.openmrs.module.OT.web.util.OperationTheatreUtilMajor;
 import org.openmrs.module.OT.web.util.OTScheduleModel;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.springframework.stereotype.Controller;
@@ -82,7 +82,7 @@ public class SearchProcedureController {
 				currentPage = 1;	
 			List<OpdTestOrder> schedules = ots.getSchedulesMajorOT(date, phrase, procedures, 
 					currentPage);
-			List<OTScheduleModel> otProcedures = OperationTheatreUtil_Major.generateModelsFromSchedules(
+			List<OTScheduleModel> otProcedures = OperationTheatreUtilMajor.generateModelsFromSchedules(
 					schedules);
 
 			int total = ots.countScheduleMajorOT(date, phrase, procedures);

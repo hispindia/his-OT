@@ -125,11 +125,21 @@ public class HibernateOperationTheatreDAO implements OperationTheatreDAO {
 		}
 	}
 
-	public Obs getObsInstance(Encounter encounter,Concept valueCoded) {
+	public List<Obs> getObsInstanceForDiagnosis(Encounter encounter,Concept concept,Date date) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria
 				(Obs.class);
 		criteria.add(Restrictions.eq("encounter", encounter));
-		criteria.add(Restrictions.eq("valueCoded", valueCoded));
+		criteria.add(Restrictions.eq("concept", concept));
+		criteria.add(Restrictions.eq("dateCreated", date));
+		return criteria.list();
+	}
+	
+	public Obs getObsInstanceForProcedure(Encounter encounter,Concept valuCoded,Date date) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria
+				(Obs.class);
+		criteria.add(Restrictions.eq("encounter", encounter));
+		criteria.add(Restrictions.eq("valueCoded", valuCoded));
+		criteria.add(Restrictions.eq("dateCreated", date));
 		return (Obs) criteria.uniqueResult();
 	}
 
