@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
@@ -90,6 +89,7 @@ public class OperationTheatreUtilMajor {
 				for(Obs pDiagnos:pDiagnosis){
 					pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 				}
+				pd = pd.substring(0, pd.length()-1); 
 				osm.setpDiagnosis(pd);
 				//osm.setpDiagnosis(schedule.getValueCoded().getName().toString());
 		
@@ -115,6 +115,7 @@ public class OperationTheatreUtilMajor {
 					for(Obs pDiagnos:pDiagnosis){
 						pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 					}
+					pd = pd.substring(0, pd.length()-1); 
 					osm.setpDiagnosis(pd);
 				} else {
 					return null;

@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
@@ -88,11 +87,12 @@ public class OperationTheatreUtilMinor {
 				//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 				//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
-				String abc="";
+				String pd="";
 				for(Obs pDiagnos:pDiagnosis){
-					abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+					pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 				}
-				osm.setpDiagnosis(abc);
+				pd = pd.substring(0, pd.length()-1); 
+				osm.setpDiagnosis(pd);
 		
 			} else {
 				if (!procedure.getStatus().equals(OTConstants.PROCEDURE_STATUS_COMPLETED)) {
@@ -112,11 +112,12 @@ public class OperationTheatreUtilMinor {
 					//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 					//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
-					String abc="";
+					String pd="";
 					for(Obs pDiagnos:pDiagnosis){
-						abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+						pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 					}
-					osm.setpDiagnosis(abc);
+					pd = pd.substring(0, pd.length()-1); 
+					osm.setpDiagnosis(pd);
 				} else {
 					return null;
 				}

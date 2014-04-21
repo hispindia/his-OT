@@ -128,11 +128,12 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 			procedure.setOpdOrderId(schedule);
 			
 			pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
-			String abc="";
+			String pd="";
 			for(Obs pDiagnos:pDiagnosis){
-				abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+				pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 			}
-			procedure.setDiagnosis(abc);
+			pd = pd.substring(0, pd.length()-1); 
+			procedure.setDiagnosis(pd);
 			procedure.setOtSchedule(new Date());
 			procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
 	
@@ -278,11 +279,12 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 				procedure.setOpdOrderId(schedule);
 				
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
-				String abc="";
+				String pd="";
 				for(Obs pDiagnos:pDiagnosis){
-					abc=abc+pDiagnos.getValueCoded().getName().toString()+",";
+					pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 				}
-				procedure.setDiagnosis(abc);
+				pd = pd.substring(0, pd.length()-1); 
+				procedure.setDiagnosis(pd);
 				procedure.setOtSchedule(new Date());
 				procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
 		
