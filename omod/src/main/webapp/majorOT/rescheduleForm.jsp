@@ -43,7 +43,7 @@
 			<table class="procedureInfo" cellspacing="15">
 				<tr>
 					<td class='info'>Patient Name</td>
-					<td>${procedure.patientName}</td>
+					<td>${fn:replace(procedure.patientName,',',' ')}</td>
 					<td></td>
 					<td class='info'>Patient Identifier</td>
 					<td>${procedure.patientIdentifier}</td>

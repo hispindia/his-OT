@@ -61,7 +61,7 @@ otProcedureNo = ${otProcedureNo};
 					${otProcedure.patientIdentifier}
 				</td>
 				<td>
-					${otProcedure.patientName}
+					${fn:replace(otProcedure.patientName,',',' ')}
 				</td>
 				<td>
 					${otProcedure.age}
