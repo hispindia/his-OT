@@ -26,7 +26,7 @@ otProcedureNo = ${otProcedureNo};
 		<tr> 
 			<th>S.No</th>
 			<th>Date</th>
-			<th>Patient ID</th>
+			<th>Patient Identifier</th>
 			<th>Name</th>
 			<th>Age</th>
 			<th>Gender</th>
