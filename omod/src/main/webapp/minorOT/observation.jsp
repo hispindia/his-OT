@@ -68,10 +68,10 @@
 				observations: observations
 			}),
 			success : function(data) {
-				if (data.indexOf('success')>=0) {
-					location.href = getContextPath() + "/module/patientqueue/main.htm";
+				if (data.indexOf('error')>=0) {
+					alert("There is some error in the page"+" "+data);
 				} else {
-					alert(data);
+				location.href = getContextPath() + data;
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {

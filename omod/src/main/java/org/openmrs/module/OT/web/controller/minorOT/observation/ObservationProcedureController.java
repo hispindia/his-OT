@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller("ObservationController")
 @RequestMapping("/module/OT/observationProcedure.form")
@@ -60,6 +61,7 @@ public class ObservationProcedureController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
+	@ResponseBody
 	public String observationProcedure(Model model,
 			@ModelAttribute("schedule") MinorOTProcedure schedule,
 			@RequestParam("observations") String observations) {
@@ -72,10 +74,11 @@ public class ObservationProcedureController {
 			} catch(Exception e) {
 				e.printStackTrace();
 				model.addAttribute("status", "Failed");
+				return "error:"+e.getMessage();
 			}
 		}
 		PatientQueueService queueService = Context.getService(PatientQueueService.class);
 		OpdPatientQueueLog opdPatientQueueLog=queueService.getOpdPatientQueueLogByEncounter(schedule.getEncounter());
-		return "redirect:/module/patientdashboard/main.htm?patientId="+opdPatientQueueLog.getPatient().getPatientId() + "&opdId=" + opdPatientQueueLog.getOpdConcept().getConceptId() + "&referralId=" + opdPatientQueueLog.getReferralConcept().getConceptId() + "&opdLogId=" + opdPatientQueueLog.getId();
+		return "/module/patientdashboard/main.htm?patientId="+opdPatientQueueLog.getPatient().getPatientId() + "&opdId=" + opdPatientQueueLog.getOpdConcept().getConceptId() + "&referralId=" + opdPatientQueueLog.getReferralConcept().getConceptId() + "&opdLogId=" + opdPatientQueueLog.getId();
 	}
 }
