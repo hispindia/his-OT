@@ -71,7 +71,7 @@
 				if (data.indexOf('success')>=0) {
 					location.href = getContextPath() + "/module/patientqueue/main.htm";
 				} else {
-					alert(data);
+					location.href = getContextPath() + data;
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
