@@ -78,6 +78,6 @@ public class ObservationProcedureController {
 		}
 		PatientQueueService queueService = Context.getService(PatientQueueService.class);
 		OpdPatientQueueLog opdPatientQueueLog=queueService.getOpdPatientQueueLogByEncounter(schedule.getEncounter());
-		return "/module/patientdashboard/main.htm?patientId="+opdPatientQueueLog.getPatient().getPatientId() + "&opdId=" + opdPatientQueueLog.getOpdConcept().getConceptId() + "&referralId=" + opdPatientQueueLog.getReferralConcept().getConceptId() + "&opdLogId=" + opdPatientQueueLog.getId();
+		return "/module/patientdashboard/main.htm?patientId="+opdPatientQueueLog.getPatient().getPatientId() + "&opdId=" + opdPatientQueueLog.getOpdConcept().getConceptId() + "&visitStatus=" + opdPatientQueueLog.getVisitStatus() + "&opdLogId=" + opdPatientQueueLog.getId();
 	}
 }
