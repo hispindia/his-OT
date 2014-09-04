@@ -21,7 +21,7 @@
 	style="border-bottom: 1px solid black; padding-bottom: 5px; margin-bottom: 10px;">
 	<ul id="menu">
 		<li class="first"><span
-			style="font-weight: bold; font-size: medium;">Minor OT Procedure</span>
+			style="font-weight: bold; font-size: medium;">Major OT Procedure</span>
 		</li>
 		<openmrs:hasPrivilege privilege="Access Major OT">
             <li id="QueueId" <c:if test='<%= request.getRequestURI().contains("/majorQueue") %>'>class="active"</c:if>>
