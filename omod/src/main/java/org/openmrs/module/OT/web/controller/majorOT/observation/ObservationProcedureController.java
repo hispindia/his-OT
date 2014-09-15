@@ -26,7 +26,9 @@ import org.openmrs.module.OT.model.MajorOTProcedure;
 import org.openmrs.module.OT.web.util.OTScheduleModel;
 import org.openmrs.module.OT.web.util.OperationTheatreUtilMajor;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
+import org.openmrs.module.hospitalcore.IpdService;
 import org.openmrs.module.hospitalcore.PatientQueueService;
+import org.openmrs.module.hospitalcore.model.IpdPatientAdmissionLog;
 import org.openmrs.module.hospitalcore.model.OpdPatientQueueLog;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.springframework.stereotype.Controller;
@@ -76,8 +78,17 @@ public class ObservationProcedureController {
 				model.addAttribute("status", "Failed");
 			}
 		}
+		IpdService ipdService = Context.getService(IpdService.class);
 		PatientQueueService queueService = Context.getService(PatientQueueService.class);
-		OpdPatientQueueLog opdPatientQueueLog=queueService.getOpdPatientQueueLogByEncounter(schedule.getEncounter());
+		IpdPatientAdmissionLog ipdPatientAdmissionLog =null;
+		OpdPatientQueueLog opdPatientQueueLog=null;
+        if(schedule.getEncounter().getEncounterType().getName().equalsIgnoreCase("OPDENCOUNTER")){
+        	opdPatientQueueLog=queueService.getOpdPatientQueueLogByEncounter(schedule.getEncounter());
+		}
+        else{
+        	ipdPatientAdmissionLog=ipdService.getIpdPatientAdmissionLog(schedule.getEncounter());
+    		opdPatientQueueLog=ipdPatientAdmissionLog.getOpdLog();
+        }
 		return "/module/patientdashboard/main.htm?patientId="+opdPatientQueueLog.getPatient().getPatientId() + "&opdId=" + opdPatientQueueLog.getOpdConcept().getConceptId() + "&visitStatus=" + opdPatientQueueLog.getVisitStatus() + "&opdLogId=" + opdPatientQueueLog.getId();
 	}
 }
