@@ -86,10 +86,12 @@ public class OperationTheatreUtilMajor {
 				
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
 				String pd="";
+				if(pDiagnosis.size()>0){
 				for(Obs pDiagnos:pDiagnosis){
 					pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 				}
 				pd = pd.substring(0, pd.length()-1); 
+				}
 				osm.setpDiagnosis(pd);
 				//osm.setpDiagnosis(schedule.getValueCoded().getName().toString());
 		
@@ -112,10 +114,12 @@ public class OperationTheatreUtilMajor {
 					//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
 					String pd="";
+					if(pDiagnosis.size()>0){
 					for(Obs pDiagnos:pDiagnosis){
 						pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 					}
 					pd = pd.substring(0, pd.length()-1); 
+					}
 					osm.setpDiagnosis(pd);
 				} else {
 					return null;
