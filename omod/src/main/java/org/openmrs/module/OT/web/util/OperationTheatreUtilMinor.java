@@ -65,10 +65,12 @@ public class OperationTheatreUtilMinor {
 	
 		Encounter encounter = schedule.getEncounter();
 		List<Obs> pDiagnosis;
+		List<Obs> pFinalDiagnosis;
 		OTScheduleModel osm = new OTScheduleModel();
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
-		MinorOTProcedure procedure = ots.getMinorOTProcedure(schedule);;
+		MinorOTProcedure procedure = ots.getMinorOTProcedure(schedule);
+		
 		if (encounter != null && encounter.getAllObs().size() != 0) {
 			if (procedure == null) {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -78,7 +80,7 @@ public class OperationTheatreUtilMinor {
 				osm.setGender(schedule.getPatient().getGender());
 				osm.setAge(schedule.getPatient().getAge());
 				osm.setOrderId(schedule.getOpdOrderId());
-				
+				System.out.println(schedule.getOpdOrderId()+"values");
 				if (encounter != null)
 					osm.setEncounterId(encounter.getEncounterId());
 				osm.setProcedure(schedule.getValueCoded().getName().toString());
@@ -87,6 +89,10 @@ public class OperationTheatreUtilMinor {
 				//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 				//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+				System.out.println(pDiagnosis+"ttttttttt");
+				pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
+				System.out.println(pFinalDiagnosis+"sssssssssss");
+				
 				String pd="";
 				if(pDiagnosis.size()>0){
 				for(Obs pDiagnos:pDiagnosis){
@@ -94,7 +100,14 @@ public class OperationTheatreUtilMinor {
 				}
 				pd = pd.substring(0, pd.length()-1); 
 				}
-				osm.setpDiagnosis(pd);
+				 if(pFinalDiagnosis.size()>0){
+				for(Obs pFinalDiagnos:pFinalDiagnosis){
+						pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+					}
+					pd = pd.substring(0, pd.length()-1); 
+					
+				}
+				 osm.setpDiagnosis(pd);
 		
 			} else {
 				if (!procedure.getStatus().equals(OTConstants.PROCEDURE_STATUS_COMPLETED)) {
@@ -114,6 +127,10 @@ public class OperationTheatreUtilMinor {
 					//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 					//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+					System.out.println(pDiagnosis+"*************");
+					pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
+					System.out.println(pFinalDiagnosis+"zzzzzzz");
+					
 					String pd="";
 					if(pDiagnosis.size()>0){
 					for(Obs pDiagnos:pDiagnosis){
@@ -121,7 +138,14 @@ public class OperationTheatreUtilMinor {
 					}
 					pd = pd.substring(0, pd.length()-1); 
 					}
-					osm.setpDiagnosis(pd);
+					 if(pFinalDiagnosis.size()>0){
+					for(Obs pFinalDiagnos:pFinalDiagnosis){
+							pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+						}
+						pd = pd.substring(0, pd.length()-1); 
+						
+					}
+					 osm.setpDiagnosis(pd);
 				} else {
 					return null;
 				}
@@ -199,6 +223,7 @@ public class OperationTheatreUtilMinor {
 		
 		if (encounter != null && encounter.getAllObs().size() != 0) {
 			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
+			System.out.println(schedule.getOpdOrderId().getOpdOrderId()+"yyyyyyyyy");
 		}
 		return osm;
 	}
