@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
@@ -115,7 +116,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 	public Integer acceptProcedureMinor(OpdTestOrder schedule)
 		throws ParseException {
 		Encounter encounter = schedule.getEncounter();
-		List<Obs> pDiagnosis;
+		List<Obs> pDiagnosis;List<Obs> pFinalDiagnosis;
 		MinorOTProcedure procedure = dao.getMinorOTProcedure(schedule);
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
@@ -128,11 +129,21 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 			procedure.setOpdOrderId(schedule);
 			
 			pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+			pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
+			
 			String pd="";
-			for(Obs pDiagnos:pDiagnosis){
+			if(pDiagnosis.size()>0){for(Obs pDiagnos:pDiagnosis){
 				pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 			}
-			pd = pd.substring(0, pd.length()-1); 
+			pd = pd.substring(0, pd.length()-1); }
+			if(pFinalDiagnosis.size()>0){
+				for(Obs pFinalDiagnos:pFinalDiagnosis){
+					pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+				}
+				pd = pd.substring(0, pd.length()-1); 
+				
+			}
+			
 			procedure.setDiagnosis(pd);
 			procedure.setOtSchedule(new Date());
 			procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
@@ -266,7 +277,7 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 	public Integer acceptProcedureMajor(OpdTestOrder schedule)
 			throws ParseException {
 			Encounter encounter = schedule.getEncounter();
-			List<Obs> pDiagnosis;
+			List<Obs> pDiagnosis;List<Obs> pFinalDiagnosis;
 			MajorOTProcedure procedure = dao.getMajorOTProcedure(schedule);
 			OperationTheatreService ots = (OperationTheatreService) Context
 					.getService(OperationTheatreService.class);
@@ -279,11 +290,21 @@ public class OperationTheatreServiceImpl extends BaseOpenmrsService implements O
 				procedure.setOpdOrderId(schedule);
 				
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+				pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
+				
 				String pd="";
-				for(Obs pDiagnos:pDiagnosis){
+				if(pDiagnosis.size()>0){for(Obs pDiagnos:pDiagnosis){
 					pd=pd+pDiagnos.getValueCoded().getName().toString()+",";
 				}
-				pd = pd.substring(0, pd.length()-1); 
+				pd = pd.substring(0, pd.length()-1); }
+				if(pFinalDiagnosis.size()>0){
+					for(Obs pFinalDiagnos:pFinalDiagnosis){
+						pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+					}
+					pd = pd.substring(0, pd.length()-1); 
+					
+				}
+				 
 				procedure.setDiagnosis(pd);
 				procedure.setOtSchedule(new Date());
 				procedure.setStatus(OTConstants.PROCEDURE_STATUS_ACCEPTED);
