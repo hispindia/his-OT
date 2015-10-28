@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
@@ -64,7 +65,7 @@ public class OperationTheatreUtilMajor {
 	private static OTScheduleModel generateModel(OpdTestOrder schedule) {
 	
 		Encounter encounter = schedule.getEncounter();
-		List<Obs> pDiagnosis=new ArrayList<Obs>();
+		List<Obs> pDiagnosis=new ArrayList<Obs>();List<Obs> pFinalDiagnosis;
 		OTScheduleModel osm = new OTScheduleModel();
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
@@ -85,6 +86,8 @@ public class OperationTheatreUtilMajor {
 				osm.setStatus(null);
 				
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+				pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
+				
 				String pd="";
 				if(pDiagnosis.size()>0){
 				for(Obs pDiagnos:pDiagnosis){
@@ -92,6 +95,13 @@ public class OperationTheatreUtilMajor {
 				}
 				pd = pd.substring(0, pd.length()-1); 
 				}
+				if(pFinalDiagnosis.size()>0){
+					for(Obs pFinalDiagnos:pFinalDiagnosis){
+							pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+						}
+						pd = pd.substring(0, pd.length()-1); 
+						
+					}
 				osm.setpDiagnosis(pd);
 				//osm.setpDiagnosis(schedule.getValueCoded().getName().toString());
 		
@@ -113,6 +123,7 @@ public class OperationTheatreUtilMajor {
 					//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 					//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
 					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
+					pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
 					String pd="";
 					if(pDiagnosis.size()>0){
 					for(Obs pDiagnos:pDiagnosis){
@@ -120,6 +131,13 @@ public class OperationTheatreUtilMajor {
 					}
 					pd = pd.substring(0, pd.length()-1); 
 					}
+					if(pFinalDiagnosis.size()>0){
+						for(Obs pFinalDiagnos:pFinalDiagnosis){
+								pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+							}
+							pd = pd.substring(0, pd.length()-1); 
+							
+						}
 					osm.setpDiagnosis(pd);
 				} else {
 					return null;
