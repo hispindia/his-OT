@@ -30,7 +30,7 @@ otProcedureNo = ${otProcedureNo};
 			<th>Name</th>
 			<th>Age</th>
 			<th>Gender</th>
-			<th>Provisional Diagnosis</th>
+			<th>Diagnosis</th>
 			<th>Procedure</th>
 			<th>Accept</th>
 			<th>Reschedule</th>			
