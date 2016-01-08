@@ -24,13 +24,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.OT.OperationTheatreService;
 import org.openmrs.module.OT.model.MinorOTProcedure;
 import org.openmrs.module.OT.util.OTConstants;
+import org.openmrs.module.hospitalcore.HospitalCoreService;
+import org.openmrs.module.hospitalcore.IpdService;
+import org.openmrs.module.hospitalcore.model.IpdPatientAdmitted;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
 
@@ -62,10 +68,17 @@ public class OperationTheatreUtilMinor {
 	 * @return
 	 */
 	private static OTScheduleModel generateModel(OpdTestOrder schedule) {
-	
+	      
+		HospitalCoreService hospitalCoreService = (HospitalCoreService) Context.getService(HospitalCoreService.class);
+		IpdService ipdService = (IpdService) Context.getService(IpdService.class);
+		IpdPatientAdmitted admitted = ipdService.
+				getAdmittedByPatientId(schedule.getPatient().getPatientId());
+		
+	      
 		Encounter encounter = schedule.getEncounter();
-		List<Obs> pDiagnosis;
-		List<Obs> pFinalDiagnosis;
+		
+		List<Obs> pDiagnosis=new ArrayList<Obs>();
+		List<Obs> pFinalDiagnosis=new ArrayList<Obs>();
 		OTScheduleModel osm = new OTScheduleModel();
 		OperationTheatreService ots = (OperationTheatreService) Context
 				.getService(OperationTheatreService.class);
@@ -80,18 +93,21 @@ public class OperationTheatreUtilMinor {
 				osm.setGender(schedule.getPatient().getGender());
 				osm.setAge(schedule.getPatient().getAge());
 				osm.setOrderId(schedule.getOpdOrderId());
-				System.out.println(schedule.getOpdOrderId()+"values");
+				
+				
 				if (encounter != null)
+					
 					osm.setEncounterId(encounter.getEncounterId());
 				osm.setProcedure(schedule.getValueCoded().getName().toString());
+			
 				osm.setStatus(null);
 				
 				//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 				//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
+				if(admitted==null)
+				{
 				pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
-				System.out.println(pDiagnosis+"ttttttttt");
 				pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
-				System.out.println(pFinalDiagnosis+"sssssssssss");
 				
 				String pd="";
 				if(pDiagnosis.size()>0){
@@ -100,14 +116,37 @@ public class OperationTheatreUtilMinor {
 				}
 				pd = pd.substring(0, pd.length()-1); 
 				}
-				 if(pFinalDiagnosis.size()>0){
-				for(Obs pFinalDiagnos:pFinalDiagnosis){
-						pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+				if(pFinalDiagnosis.size()>0){
+					for(Obs pFinalDiagnos:pFinalDiagnosis){
+							pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+						}
+						pd = pd.substring(0, pd.length()-1); 
+						
 					}
-					pd = pd.substring(0, pd.length()-1); 
-					
+				
+				osm.setpDiagnosis(pd);
 				}
-				 osm.setpDiagnosis(pd);
+				else
+				{Set<String> lhs=new LinkedHashSet<String>();
+					pDiagnosis = hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getOpdLog().getEncounter(),Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"));
+					pDiagnosis. addAll(hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getIpdEncounter(), Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS")));
+					pFinalDiagnosis = hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getOpdLog().getEncounter(),Context.getConceptService().getConcept("FINAL DIAGNOSIS"));
+					pDiagnosis.addAll(hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getIpdEncounter(), Context.getConceptService().getConcept("FINAL DIAGNOSIS")));
+					
+					String pd="";
+					if(pDiagnosis.size()>0){
+						for(Obs pDiagnos:pDiagnosis){
+							lhs.add(pDiagnos.getValueCoded().getName().getName());
+						}
+						for(String lh:lhs){
+							pd=pd+lh+",";
+						}
+						pd = pd.substring(0, pd.length()-1); 
+						}
+					
+					
+					osm.setpDiagnosis(pd);	
+				}
 		
 			} else {
 				if (!procedure.getStatus().equals(OTConstants.PROCEDURE_STATUS_COMPLETED)) {
@@ -126,10 +165,10 @@ public class OperationTheatreUtilMinor {
 					
 					//pDiagnosis = ots.getDiagnosisOTProcedure(encounter,schedule.getValueCoded());
 					//osm.setpDiagnosis(pDiagnosis.getValueCoded().getName().toString());
+					if(admitted==null)
+					{
 					pDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"),schedule.getCreatedOn());
-					System.out.println(pDiagnosis+"*************");
 					pFinalDiagnosis = ots.getDiagnosisOTProcedure(encounter,Context.getConceptService().getConcept("FINAL DIAGNOSIS"),schedule.getCreatedOn());
-					System.out.println(pFinalDiagnosis+"zzzzzzz");
 					
 					String pd="";
 					if(pDiagnosis.size()>0){
@@ -138,14 +177,38 @@ public class OperationTheatreUtilMinor {
 					}
 					pd = pd.substring(0, pd.length()-1); 
 					}
-					 if(pFinalDiagnosis.size()>0){
-					for(Obs pFinalDiagnos:pFinalDiagnosis){
-							pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+					if(pFinalDiagnosis.size()>0){
+						for(Obs pFinalDiagnos:pFinalDiagnosis){
+								pd=pd+pFinalDiagnos.getValueCoded().getName().toString()+",";
+							}
+							pd = pd.substring(0, pd.length()-1); 
+							
 						}
-						pd = pd.substring(0, pd.length()-1); 
-						
+					
+					osm.setpDiagnosis(pd);
 					}
-					 osm.setpDiagnosis(pd);
+					else
+					{
+						Set<String> lhs=new LinkedHashSet<String>();
+						pDiagnosis = hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getOpdLog().getEncounter(),Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"));
+						pDiagnosis. addAll(hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getIpdEncounter(), Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS")));
+						pFinalDiagnosis = hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getOpdLog().getEncounter(),Context.getConceptService().getConcept("FINAL DIAGNOSIS"));
+						pDiagnosis.addAll(hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getIpdEncounter(), Context.getConceptService().getConcept("FINAL DIAGNOSIS")));
+						
+						String pd="";
+						if(pDiagnosis.size()>0){
+							for(Obs pDiagnos:pDiagnosis){
+								lhs.add(pDiagnos.getValueCoded().getName().getName());
+							}
+							for(String lh:lhs){
+								pd=pd+lh+",";
+							}
+							pd = pd.substring(0, pd.length()-1); 
+							}
+						
+						
+						osm.setpDiagnosis(pd);	
+					}
 				} else {
 					return null;
 				}
@@ -191,8 +254,16 @@ public class OperationTheatreUtilMinor {
 	 * @return 
 	 */
 	private static OTScheduleModel generateObsModel(MinorOTProcedure schedule) {
-		Encounter encounter = schedule.getEncounter();
+		HospitalCoreService hospitalCoreService = (HospitalCoreService) Context.getService(HospitalCoreService.class);
+		IpdService ipdService = (IpdService) Context.getService(IpdService.class);
+		IpdPatientAdmitted admitted = ipdService.
+				getAdmittedByPatientId(schedule.getPatient().getPatientId());
+		
 		OTScheduleModel osm = new OTScheduleModel();
+		if(admitted==null)
+		{
+		Encounter encounter = schedule.getEncounter();
+		
 		
 		if (encounter != null && encounter.getAllObs().size() != 0) {
 			
@@ -205,7 +276,46 @@ public class OperationTheatreUtilMinor {
 			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
 			osm.setProcedure(schedule.getProcedure().getName().toString());
 			osm.setpDiagnosis(schedule.getDiagnosis());
+			
 			osm.setStatus(schedule.getStatus());
+		}
+		}
+		else
+		{
+		Encounter encount=	admitted.getPatientAdmissionLog().getOpdLog().getEncounter();
+		Set<String> lhs=new LinkedHashSet<String>();
+		List<Obs> pDiagnosis=new ArrayList<Obs>();
+		List<Obs> pFinalDiagnosis=new ArrayList<Obs>();
+		if (encount != null && encount.getAllObs().size() != 0) {
+			pDiagnosis = hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getOpdLog().getEncounter(),Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS"));
+			pDiagnosis.addAll(hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getIpdEncounter(), Context.getConceptService().getConcept("PROVISIONAL DIAGNOSIS")));
+			pFinalDiagnosis = hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getOpdLog().getEncounter(),Context.getConceptService().getConcept("FINAL DIAGNOSIS"));
+			pDiagnosis.addAll(hospitalCoreService.getObsInstanceForDiagnosis(admitted.getPatientAdmissionLog().getIpdEncounter(), Context.getConceptService().getConcept("FINAL DIAGNOSIS")));
+			String pd="";
+			if(pDiagnosis.size()>0){
+				for(Obs pDiagnos:pDiagnosis){
+					lhs.add(pDiagnos.getValueCoded().getName().getName());
+				}
+				for(String lh:lhs){
+					pd=pd+lh+",";
+				}
+				pd = pd.substring(0, pd.length()-1); 
+				}
+			
+			
+			schedule.setDiagnosis(pd);	
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			osm.setStartDate(sdf.format(schedule.getOtSchedule()));
+			osm.setPatientIdentifier(schedule.getPatient().getPatientIdentifier().getIdentifier());
+			osm.setPatientName(PatientUtils.getFullName(schedule.getPatient()));
+			osm.setGender(schedule.getPatient().getGender());
+			osm.setAge(schedule.getPatient().getAge());
+			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
+			osm.setProcedure(schedule.getProcedure().getName().toString());
+			osm.setpDiagnosis(schedule.getDiagnosis());
+			
+			osm.setStatus(schedule.getStatus());
+		}
 		}
 		return osm;
 	}
@@ -223,7 +333,7 @@ public class OperationTheatreUtilMinor {
 		
 		if (encounter != null && encounter.getAllObs().size() != 0) {
 			osm.setOrderId(schedule.getOpdOrderId().getOpdOrderId());
-			System.out.println(schedule.getOpdOrderId().getOpdOrderId()+"yyyyyyyyy");
+			;
 		}
 		return osm;
 	}
